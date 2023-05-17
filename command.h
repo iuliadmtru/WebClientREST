@@ -42,8 +42,16 @@ typedef struct command_data_t command_data_t;
  */
 void command_parse(FILE *fin, char *cmd);
 
+/*
+ * Parse user input according to a given command.
+ */
 command_data_t command_get_data(FILE *fin, FILE *fout, char *cmd);
 
 void command_data_print(command_data_t cmd_data);
+
+/*
+ * Close the connection and exit the program.
+ */
+void client_exit(int sockfd);
 
 #endif  // _COMMAND_H_

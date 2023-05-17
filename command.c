@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stdio.h>
-
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "command.h"
 
@@ -165,4 +165,10 @@ void command_data_print(command_data_t cmd_data)
             printf("undefined\n");
             break;
     }
+}
+
+void client_exit(int sockfd)
+{
+    close(sockfd);
+    exit(0);
 }

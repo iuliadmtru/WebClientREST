@@ -17,17 +17,42 @@ int main(int argc, char *argv[])
     // char *message;
     // char *response;
     // char content_type[100]= "application/x-www-form-urlencoded";
+    char cmd[CMD_MAXLEN];
 
     // Initialize server ip and port and connect to the server.
     server_t server = server_init(SERVERADDR, SERVERPORT);
     int sockfd = connection_open(server);
 
-    // Parse user command.
-    printf("Parse user command:\n");
+    while (1) {
+        // Parse user command.
+        command_parse(stdin, cmd);
+        command_data_t cmd_data = command_get_data(stdin, stdout, cmd);
 
-    char cmd[CMD_MAXLEN];
-    command_parse(stdin, cmd);
-    command_data_t cmd_data = command_get_data(stdin, stdout, cmd);
+        switch (cmd_data.command) {
+            case REGISTER:
+                break;
+            case LOGIN:
+                break;
+            case ENTER_LIBRARY:
+                break;
+            case GET_BOOKS:
+                break;
+            case GET_BOOK:
+                break;
+            case ADD_BOOK:
+                break;
+            case DELETE_BOOK:
+                break;
+            case LOGOUT:
+                break;
+            case EXIT:
+                client_exit(sockfd);
+                break;
+            case UNDEFINED:
+                fprintf(stderr, "Unknown command\n");
+                continue;
+        }
+    }
 
     // // Ex 1.1: GET dummy from main server
     // message = compute_get_request(SERVERADDR, "/api/v1/dummy", NULL, NULL, 0);
