@@ -1,9 +1,18 @@
 ---------- TEST SERVER DATA ----------
 ---------- TEST SERVER DATA: PASSED ----------
 
----------- TEST REGISTER ----------
----------- TEST REGISTER: PASSED ----------
+---------- TEST REGISTER COMMAND ----------
+---------- TEST REGISTER COMMAND: PASSED ----------
 
----------- TEST LOGIN ----------
----------- TEST LOGIN: PASSED ----------
+---------- TEST LOGIN COMMAND ----------
+---------- TEST LOGIN COMMAND: PASSED ----------
+
+---------- TEST GET BOOK COMMAND ----------
+---------- TEST GET BOOK COMMAND: PASSED ----------
+
+---------- TEST ADD BOOK COMMAND ----------
+---------- TEST ADD BOOK COMMAND: PASSED ----------
+
+---------- TEST DELETE BOOK COMMAND ----------
+---------- TEST DELETE BOOK COMMAND: PASSED ----------
 

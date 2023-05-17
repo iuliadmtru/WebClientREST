@@ -5,6 +5,8 @@
 
 #include "command.h"
 
+#define LINE_MAXLEN 256
+
 char *command_parse(FILE *fin)
 {
     char *cmd;
@@ -21,19 +23,26 @@ command_data_t command_get_data(FILE *fin, FILE *fout, char *cmd)
     if (strcmp(cmd, "register") == 0) {
         cmd_data.command = REGISTER;
         fprintf(stdin, "username=");
-        fscanf(fin, "%s", cmd_data.username);
+        fgets(cmd_data.username, LINE_MAXLEN, fin);
+        cmd_data.username[strcspn(cmd_data.username, "\n")] = 0;
+
         fprintf(stdin, "password=");
-        fscanf(fin, "%s", cmd_data.password);
+        fgets(cmd_data.password, LINE_MAXLEN, fin);
+        cmd_data.password[strcspn(cmd_data.password, "\n")] = 0;
 
         return cmd_data;
     };
     // Login command.
     if (strcmp(cmd, "login") == 0) {
         cmd_data.command = LOGIN;
+
         fprintf(stdin, "username=");
-        fscanf(fin, "%s", cmd_data.username);
+        fgets(cmd_data.username, LINE_MAXLEN, fin);
+        cmd_data.username[strcspn(cmd_data.username, "\n")] = 0;
+
         fprintf(stdin, "password=");
-        fscanf(fin, "%s", cmd_data.password);
+        fgets(cmd_data.password, LINE_MAXLEN, fin);
+        cmd_data.password[strcspn(cmd_data.password, "\n")] = 0;
 
         return cmd_data;
     };
@@ -50,32 +59,49 @@ command_data_t command_get_data(FILE *fin, FILE *fout, char *cmd)
     // Get book command.
     if (strcmp(cmd, "get_book") == 0) {
         cmd_data.command = GET_BOOK;
+
         fprintf(stdin, "id=");
-        fscanf(fin, "%d", &cmd_data.book_id);
+        char buf[LINE_MAXLEN];
+        fgets(buf, LINE_MAXLEN, fin);
+        sscanf(buf, "%d", &cmd_data.book_id);
 
         return cmd_data;
     };
     // Add book command.
     if (strcmp(cmd, "add_book") == 0) {
         cmd_data.command = ADD_BOOK;
+
         fprintf(stdin, "title=");
-        fscanf(fin, "%s", cmd_data.book_title);
+        fgets(cmd_data.book_title, LINE_MAXLEN, fin);
+        cmd_data.book_title[strcspn(cmd_data.book_title, "\n")] = 0;
+
         fprintf(stdin, "author=");
-        fscanf(fin, "%s", cmd_data.book_author);
+        fgets(cmd_data.book_author, LINE_MAXLEN, fin);
+        cmd_data.book_author[strcspn(cmd_data.book_author, "\n")] = 0;
+
         fprintf(stdin, "genre=");
-        fscanf(fin, "%s", cmd_data.book_genre);
+        fgets(cmd_data.book_genre, LINE_MAXLEN, fin);
+        cmd_data.book_genre[strcspn(cmd_data.book_genre, "\n")] = 0;
+
         fprintf(stdin, "publisher=");
-        fscanf(fin, "%s", cmd_data.book_publisher);
+        fgets(cmd_data.book_publisher, LINE_MAXLEN, fin);
+        cmd_data.book_publisher[strcspn(cmd_data.book_publisher, "\n")] = 0;
+
         fprintf(stdin, "page_count=");
-        fscanf(fin, "%d", &cmd_data.book_page_count);
+        char buf[LINE_MAXLEN];
+        fgets(buf, LINE_MAXLEN, fin);
+        sscanf(buf, "%d", &cmd_data.book_page_count);
 
         return cmd_data;
     };
     // Delete book command.
     if (strcmp(cmd, "delete_book") == 0) {
         cmd_data.command = DELETE_BOOK;
+
         fprintf(stdin, "id=");
-        fscanf(fin, "%d", &cmd_data.book_id);
+        char buf[LINE_MAXLEN];
+        fgets(buf, LINE_MAXLEN, fin);
+        sscanf(buf, "%d", &cmd_data.book_id);
 
         return cmd_data;
     };
@@ -138,6 +164,9 @@ void command_data_print(command_data_t cmd_data)
             break;
         case EXIT:
             printf("exit\n");
+            break;
+        case UNDEFINED:
+            printf("undefined\n");
             break;
     }
 }
