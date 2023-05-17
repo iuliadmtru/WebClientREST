@@ -1,28 +1,30 @@
-#ifndef _HELPERS_
-#define _HELPERS_
+#ifndef _HELPERS_H_
+#define _HELPERS_H_
 
-#define BUFLEN 4096
-#define LINELEN 1000
+#include "server_utils.h"
 
-// shows the current error
-void error(const char *msg);
+// #define BUFLEN 4096
+// #define LINELEN 1000
 
-// adds a line to a string message
-void compute_message(char *message, const char *line);
+// opens a connection with server, returns a socket
+int connection_open(server_t server);
 
-// opens a connection with server host_ip on port portno, returns a socket
-int open_connection(char *host_ip, int portno, int ip_type, int socket_type, int flag);
+// // shows the current error
+// void error(const char *msg);
 
-// closes a server connection on socket sockfd
-void close_connection(int sockfd);
+// // adds a line to a string message
+// void compute_message(char *message, const char *line);
 
-// send a message to a server
-void send_to_server(int sockfd, char *message);
+// // closes a server connection on socket sockfd
+// void close_connection(int sockfd);
 
-// receives and returns the message from a server
-char *receive_from_server(int sockfd);
+// // send a message to a server
+// void send_to_server(int sockfd, char *message);
 
-// extracts and returns a JSON from a server response
-char *basic_extract_json_response(char *str);
+// // receives and returns the message from a server
+// char *receive_from_server(int sockfd);
 
-#endif
+// // extracts and returns a JSON from a server response
+// char *basic_extract_json_response(char *str);
+
+#endif  // _HELPERS_H_

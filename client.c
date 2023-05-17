@@ -10,6 +10,7 @@
 // #include "requests.h"
 #include "server_utils.h"
 #include "helpers.h"
+#include "command.h"
 
 int main(int argc, char *argv[])
 {
@@ -22,6 +23,11 @@ int main(int argc, char *argv[])
     int sockfd = connection_open(server);
 
     // Parse user command.
+    printf("Parse user command:\n");
+
+    char cmd[CMD_MAXLEN];
+    command_parse(stdin, cmd);
+    command_data_t cmd_data = command_get_data(stdin, stdout, cmd);
 
     // // Ex 1.1: GET dummy from main server
     // message = compute_get_request(SERVERADDR, "/api/v1/dummy", NULL, NULL, 0);

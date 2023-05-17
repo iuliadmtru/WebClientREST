@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define LINE_MAXLEN 256
 #define CMD_MAXLEN 14
 #define USERNAME_MAXLEN 100
 #define PASSWORD_MAXLEN 100
@@ -39,7 +40,7 @@ typedef struct command_data_t command_data_t;
 /*
  * Parse user command (possibly followed by other user input).
  */
-char *command_parse(FILE *fin);
+void command_parse(FILE *fin, char *cmd);
 
 command_data_t command_get_data(FILE *fin, FILE *fout, char *cmd);
 

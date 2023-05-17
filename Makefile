@@ -1,8 +1,8 @@
 CC=gcc
 CFLAGS=-I -Wall.
 
-client: client.c requests.c helpers.c buffer.c parson.*
-	$(CC) $(CFLAGS) -o client client.c requests.c helpers.c buffer.c parson.h
+client: client.c helpers.* server_utils.* command.* parson.*
+	$(CC) $(CFLAGS) -o client client.c helpers.c server_utils.c command.c parson.c
 
 run: client
 	./client
