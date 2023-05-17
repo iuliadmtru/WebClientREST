@@ -1,6 +1,9 @@
 #ifndef _COMMAND_H_
 #define _COMMAND_H_
 
+#include <stdlib.h>
+#include <stdio.h>
+
 #define CMD_MAXLEN 14
 #define USERNAME_MAXLEN 100
 #define PASSWORD_MAXLEN 100
@@ -17,7 +20,8 @@ enum commands {REGISTER,
                ADD_BOOK,
                DELETE_BOOK,
                LOGOUT,
-               EXIT};
+               EXIT,
+               UNDEFINED};
 
 struct command_data_t {
     int command;
@@ -35,8 +39,10 @@ typedef struct command_data_t command_data_t;
 /*
  * Parse user command (possibly followed by other user input).
  */
-char *command_parse();
+char *command_parse(FILE *fin);
 
-command_data_t command_get_data(char *cmd);
+command_data_t command_get_data(FILE *fin, FILE *fout, char *cmd);
+
+void command_data_print(command_data_t cmd_data);
 
 #endif  // _COMMAND_H_
