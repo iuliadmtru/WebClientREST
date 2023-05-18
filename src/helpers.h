@@ -13,7 +13,8 @@ enum error_codes {USERNAME_UNAVAILABLE = -1,
                   NOT_LOGGED_IN = -3,
                   ACCESS_DENIED = -4,
                   INVALID_ID = -5,
-                  INCORRECT_DETAILS = -6};
+                  INCORRECT_DETAILS = -6,
+                  ALREADY_LOGGED_IN = -7};
 
 // opens a connection with server, returns a socket
 void connection_open(client_t *client);

@@ -271,6 +271,14 @@ int client_register(client_t *client, command_data_t cmd_data)
 
 int client_login(client_t *client, command_data_t cmd_data)
 {
+    int ret;
+
+    // If the client is already logged in, don't log in again.
+    if (client->cookie) {
+        strcpy(client->error_message, "Already logged in!");
+        return ALREADY_LOGGED_IN;
+    }
+    
     // Compute message.
     char *data = serialize_login(cmd_data);
     char *message = compute_post_request(client->host_ip,
@@ -286,14 +294,16 @@ int client_login(client_t *client, command_data_t cmd_data)
 
     // Receive message.
     char *response = receive_from_server(client->sockfd);
+    char *response_copy = response;
 
     // Store cookie.
-    cookie_t *login_cookie = recover_cookie(response);
+    cookie_t *login_cookie = recover_cookie(response_copy);
     client_add_cookie(client, login_cookie);
 
     // Treat (potential) errors.
+    response_copy = response;
     char *payload = recover_payload(response);
-    int ret = treat_server_error(client, payload, cmd_data);
+    ret = treat_server_error(client, payload, cmd_data);
 
     // Free resources.
     free(data);

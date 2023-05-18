@@ -12,6 +12,9 @@ cookie_t *cookie_create()
 
 void cookie_destroy(cookie_t *cookie)
 {
+    if (!cookie)
+        return;
+
     for (int i = 0; i < cookie->fields_num; i++) {
         free(cookie->cookie[i]);
     }

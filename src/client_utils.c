@@ -15,6 +15,7 @@ client_t *client_init(char *ip, uint16_t port)
     strcpy(client->host_ip, ip);
     client->host_port = port;
     client->sockfd = -1;
+    client->cookie = NULL;
 
     return client;
 }
@@ -28,7 +29,9 @@ void client_destroy(client_t *client)
 
 void client_add_cookie(client_t *client, cookie_t *cookie)
 {
-    client->cookie = cookie;
+    if (cookie) {
+        client->cookie = cookie;
+    }
 }
 
 void client_print(client_t *client)
@@ -38,6 +41,11 @@ void client_print(client_t *client)
     printf("\tHost port: %hu\n", client->host_port);
     printf("\tSocket file descriptor: %d\n", client->sockfd);
     printf("\tError message: %s\n", client->error_message);
+    if (!client->cookie) {
+        printf("\tNo cookie.\n");
+        return;
+    }
+    printf("\t");
     cookie_print(client->cookie, stdout);
 }
 

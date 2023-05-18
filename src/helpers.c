@@ -127,14 +127,16 @@ void error(const char *msg)
 
 cookie_t *recover_cookie(char *server_response)
 {
-    cookie_t *cookie = cookie_create();
-
     // Find the line with the cookie.
     char *field = strstr(server_response, "Set-Cookie:");
+    if (!field)
+        return NULL;
+
     // Keep only the cookie line and consume the key.
     server_response = strsep(&field, "\n");
     field = strsep(&server_response, " ");
 
+    cookie_t *cookie = cookie_create();
     while ((field = strsep(&server_response, " ")) != NULL) {
         cookie_add_field(cookie, field);
     }
