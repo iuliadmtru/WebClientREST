@@ -262,14 +262,10 @@ int client_register(client_t *client, command_data_t cmd_data)
     char *payload = recover_payload(response);
     int ret = treat_server_error(client, payload, stderr);
 
-    client_print(client);
-
     // Free resources.
     free(data);
     free(message);
     free(response);
-
-    client_print(client);
 
     return ret;
 }

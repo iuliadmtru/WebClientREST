@@ -32,7 +32,6 @@ int main(int argc, char *argv[])
         switch (cmd_data.command) {
             case REGISTER:
                 ret = client_register(client, cmd_data);
-                printf("ret = %d\n", ret);
                 break;
             case LOGIN:
                 break;
