@@ -152,8 +152,12 @@ int treat_server_error(client_t *client, char *payload, FILE *fout)
         error_msg[len - 2] = 0;
 
         // Store error message.
-        memcpy(client->error_message, error_msg, strlen(error_msg) + 1);
+        strcpy(client->error_message, error_msg);
         ret = USERNAME_UNAVAILABLE;
+    } else {
+        // Store success message.
+        strcpy(client->error_message,
+               "200 - OK - Utilizator înregistrat cu succes!\n");
     }
 
     return ret;

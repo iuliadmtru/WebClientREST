@@ -35,7 +35,5 @@ void client_print(client_t *client)
 
 void client_treat_error(client_t *client, FILE *fout)
 {
-    printf("client_treat_error\n");
-    client_print(client);
     fprintf(stdout, "%s\n", client->error_message);
 }

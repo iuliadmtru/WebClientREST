@@ -55,8 +55,7 @@ int main(int argc, char *argv[])
                 continue;
         }
 
-        if (ret < 0)
-            client_treat_error(client, stderr);
+        client_treat_error(client, stderr);
     }
 
     // // Ex 1.1: GET dummy from main server
