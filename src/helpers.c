@@ -133,7 +133,25 @@ char *recover_payload(char *server_response)
     return payload;
 }
 
-int treat_server_error(client_t *client, char *payload, FILE *fout)
+void store_success_message(client_t *client, int cmd)
+{
+    switch (cmd) {
+        case REGISTER:
+            strcpy(client->error_message,
+                "200 - OK - Registration successful!");
+            break;
+        case LOGIN:
+            strcpy(client->error_message,
+                "200 - OK - Login successful!");
+            break;
+        case UNDEFINED:
+            break;
+    }
+}
+
+int treat_server_error(client_t *client,
+                       char *payload,
+                       command_data_t cmd_data)
 {
     int ret = 0;
     char *tmp;
@@ -155,20 +173,8 @@ int treat_server_error(client_t *client, char *payload, FILE *fout)
         strcpy(client->error_message, error_msg);
         ret = USERNAME_UNAVAILABLE;
     } else {
-        // Store success message.
-        strcpy(client->error_message,
-               "200 - OK - Utilizator înregistrat cu succes!\n");
+        store_success_message(client, cmd_data.command);
     }
 
     return ret;
 }
-
-// void close_connection(int sockfd)
-// {
-//     close(sockfd);
-// }
-
-// char *basic_extract_json_response(char *str)
-// {
-//     return strstr(str, "{\"");
-// }

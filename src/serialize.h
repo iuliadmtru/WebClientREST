@@ -6,4 +6,6 @@
 
 char *serialize_register(command_data_t cmd_data);
 
+char *serialize_login(command_data_t cmd_data);
+
 #endif  // _SERIALIZE_H_

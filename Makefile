@@ -26,7 +26,7 @@ run_tests: client
 	./client < test/tests.in > test/tests.out && ((cmp test/tests.ref test/tests.out && echo 'PASSED') || echo 'FAILED')
 
 run_tests_valgrind: client
-	valgrind --track-origins=yes ../client < test/tests.in > test/tests.out && ((cmp test/tests.ref test/tests.out && echo 'PASSED') || echo 'FAILED')
+	valgrind --track-origins=yes ./client < test/tests.in > test/tests.out && ((cmp test/tests.ref test/tests.out && echo 'PASSED') || echo 'FAILED')
 
 clean:
 	rm -f *.o client dummy_test

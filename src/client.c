@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
                 ret = client_register(client, cmd_data);
                 break;
             case LOGIN:
+                ret = client_login(client, cmd_data);
                 break;
             case ENTER_LIBRARY:
                 break;

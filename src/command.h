@@ -66,6 +66,11 @@ void command_data_print(command_data_t cmd_data);
 int client_register(client_t *client, command_data_t cmd_data);
 
 /*
+ * Login with a username and password. Return -2 if the credentials are invalid.
+ */
+int client_login(client_t *client, command_data_t cmd_data);
+
+/*
  * Close the connection and exit the program.
  */
 void client_exit(client_t *client);

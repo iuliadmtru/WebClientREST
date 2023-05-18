@@ -2,6 +2,7 @@
 #define _HELPERS_H_
 
 #include "client_utils.h"
+#include "command.h"
 
 #define BUFLEN 4096
 #define LINELEN 1000
@@ -33,7 +34,9 @@ void error(const char *msg);
 
 char *recover_payload(char *server_response);
 
-int treat_server_error(client_t *client, char *payload, FILE *fout);
+int treat_server_error(client_t *client,
+                       char *payload,
+                       command_data_t cmd_data);
 
 // // closes a server connection on socket sockfd
 // void close_connection(int sockfd);
