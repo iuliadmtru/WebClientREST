@@ -24,12 +24,20 @@ command_data_t command_get_data(FILE *fin, FILE *fout, char *cmd)
     if (strcmp(cmd, "register") == 0) {
         cmd_data.command = REGISTER;
         fprintf(fout, "username=");
-        fgets(cmd_data.username, LINE_MAXLEN, fin);
+        fgets(cmd_data.username, USERNAME_MAXLEN, fin);
         cmd_data.username[strcspn(cmd_data.username, "\n")] = 0;
 
         fprintf(fout, "password=");
-        fgets(cmd_data.password, LINE_MAXLEN, fin);
+        fgets(cmd_data.password, PASSWORD_MAXLEN, fin);
         cmd_data.password[strcspn(cmd_data.password, "\n")] = 0;
+
+        // The rest of the fields are empty.
+        strcpy(cmd_data.book_author, "");
+        strcpy(cmd_data.book_genre, "");
+        strcpy(cmd_data.book_title, "");
+        strcpy(cmd_data.book_publisher, "");
+        cmd_data.book_id = -1;
+        cmd_data.book_page_count = 0;
 
         return cmd_data;
     };
@@ -38,23 +46,53 @@ command_data_t command_get_data(FILE *fin, FILE *fout, char *cmd)
         cmd_data.command = LOGIN;
 
         fprintf(fout, "username=");
-        fgets(cmd_data.username, LINE_MAXLEN, fin);
+        fgets(cmd_data.username, USERNAME_MAXLEN, fin);
         cmd_data.username[strcspn(cmd_data.username, "\n")] = 0;
 
         fprintf(fout, "password=");
-        fgets(cmd_data.password, LINE_MAXLEN, fin);
+        fgets(cmd_data.password, PASSWORD_MAXLEN, fin);
         cmd_data.password[strcspn(cmd_data.password, "\n")] = 0;
+
+        // The rest of the fields are empty.
+        strcpy(cmd_data.book_author, "");
+        strcpy(cmd_data.book_genre, "");
+        strcpy(cmd_data.book_title, "");
+        strcpy(cmd_data.book_publisher, "");
+        cmd_data.book_id = -1;
+        cmd_data.book_page_count = 0;
 
         return cmd_data;
     };
     // Enter library command.
     if (strcmp(cmd, "enter_library") == 0) {
         cmd_data.command = ENTER_LIBRARY;
+
+        // The rest of the fields are empty.
+        strcpy(cmd_data.username, "");
+        strcpy(cmd_data.password, "");
+        strcpy(cmd_data.book_author, "");
+        strcpy(cmd_data.book_genre, "");
+        strcpy(cmd_data.book_title, "");
+        strcpy(cmd_data.book_publisher, "");
+        cmd_data.book_id = -1;
+        cmd_data.book_page_count = 0;
+
         return cmd_data;
     };
     // Get books command.
     if (strcmp(cmd, "get_books") == 0) {
         cmd_data.command = GET_BOOKS;
+
+        // The rest of the fields are empty.
+        strcpy(cmd_data.username, "");
+        strcpy(cmd_data.password, "");
+        strcpy(cmd_data.book_author, "");
+        strcpy(cmd_data.book_genre, "");
+        strcpy(cmd_data.book_title, "");
+        strcpy(cmd_data.book_publisher, "");
+        cmd_data.book_id = -1;
+        cmd_data.book_page_count = 0;
+
         return cmd_data;
     };
     // Get book command.
@@ -66,6 +104,15 @@ command_data_t command_get_data(FILE *fin, FILE *fout, char *cmd)
         fgets(buf, LINE_MAXLEN, fin);
         sscanf(buf, "%d", &cmd_data.book_id);
 
+        // The rest of the fields are empty.
+        strcpy(cmd_data.username, "");
+        strcpy(cmd_data.password, "");
+        strcpy(cmd_data.book_author, "");
+        strcpy(cmd_data.book_genre, "");
+        strcpy(cmd_data.book_title, "");
+        strcpy(cmd_data.book_publisher, "");
+        cmd_data.book_page_count = 0;
+
         return cmd_data;
     };
     // Add book command.
@@ -73,25 +120,30 @@ command_data_t command_get_data(FILE *fin, FILE *fout, char *cmd)
         cmd_data.command = ADD_BOOK;
 
         fprintf(fout, "title=");
-        fgets(cmd_data.book_title, LINE_MAXLEN, fin);
+        fgets(cmd_data.book_title, TITLE_MAXLEN, fin);
         cmd_data.book_title[strcspn(cmd_data.book_title, "\n")] = 0;
 
         fprintf(fout, "author=");
-        fgets(cmd_data.book_author, LINE_MAXLEN, fin);
+        fgets(cmd_data.book_author, AUTHOR_MAXLEN, fin);
         cmd_data.book_author[strcspn(cmd_data.book_author, "\n")] = 0;
 
         fprintf(fout, "genre=");
-        fgets(cmd_data.book_genre, LINE_MAXLEN, fin);
+        fgets(cmd_data.book_genre, GENRE_MAXLEN, fin);
         cmd_data.book_genre[strcspn(cmd_data.book_genre, "\n")] = 0;
 
         fprintf(fout, "publisher=");
-        fgets(cmd_data.book_publisher, LINE_MAXLEN, fin);
+        fgets(cmd_data.book_publisher, PUBLISHER_MAXLEN, fin);
         cmd_data.book_publisher[strcspn(cmd_data.book_publisher, "\n")] = 0;
 
         fprintf(fout, "page_count=");
         char buf[LINE_MAXLEN];
         fgets(buf, LINE_MAXLEN, fin);
         sscanf(buf, "%d", &cmd_data.book_page_count);
+
+        // The rest of the fields are empty.
+        strcpy(cmd_data.username, "");
+        strcpy(cmd_data.password, "");
+        cmd_data.book_id = -1;
 
         return cmd_data;
     };
@@ -104,21 +156,61 @@ command_data_t command_get_data(FILE *fin, FILE *fout, char *cmd)
         fgets(buf, LINE_MAXLEN, fin);
         sscanf(buf, "%d", &cmd_data.book_id);
 
+        // The rest of the fields are empty.
+        strcpy(cmd_data.username, "");
+        strcpy(cmd_data.password, "");
+        strcpy(cmd_data.book_author, "");
+        strcpy(cmd_data.book_genre, "");
+        strcpy(cmd_data.book_title, "");
+        strcpy(cmd_data.book_publisher, "");
+        cmd_data.book_page_count = 0;
+
         return cmd_data;
     };
     // Logout command.
     if (strcmp(cmd, "logout") == 0) {
         cmd_data.command = LOGOUT;
+
+        // The rest of the fields are empty.
+        strcpy(cmd_data.username, "");
+        strcpy(cmd_data.password, "");
+        strcpy(cmd_data.book_author, "");
+        strcpy(cmd_data.book_genre, "");
+        strcpy(cmd_data.book_title, "");
+        strcpy(cmd_data.book_publisher, "");
+        cmd_data.book_id = -1;
+        cmd_data.book_page_count = 0;
+
         return cmd_data;
     };
     // Exit command.
     if (strcmp(cmd, "exit") == 0) {
         cmd_data.command = EXIT;
+
+        // The rest of the fields are empty.
+        strcpy(cmd_data.username, "");
+        strcpy(cmd_data.password, "");
+        strcpy(cmd_data.book_author, "");
+        strcpy(cmd_data.book_genre, "");
+        strcpy(cmd_data.book_title, "");
+        strcpy(cmd_data.book_publisher, "");
+        cmd_data.book_id = -1;
+        cmd_data.book_page_count = 0;
+
         return cmd_data;
     };
 
     // Unknown command.
     cmd_data.command = UNDEFINED;
+    strcpy(cmd_data.username, "");
+    strcpy(cmd_data.password, "");
+    strcpy(cmd_data.book_author, "");
+    strcpy(cmd_data.book_genre, "");
+    strcpy(cmd_data.book_title, "");
+    strcpy(cmd_data.book_publisher, "");
+    cmd_data.book_id = -1;
+    cmd_data.book_page_count = 0;
+
     return cmd_data;
 }
 
