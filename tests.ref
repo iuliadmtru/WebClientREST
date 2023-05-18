@@ -1,5 +1,5 @@
----------- TEST SERVER DATA ----------
----------- TEST SERVER DATA: PASSED ----------
+---------- TEST CLIENT DATA ----------
+---------- TEST CLIENT DATA: PASSED ----------
 
 ---------- TEST REGISTER COMMAND ----------
 ---------- TEST REGISTER COMMAND: PASSED ----------
@@ -16,3 +16,4 @@
 ---------- TEST DELETE BOOK COMMAND ----------
 ---------- TEST DELETE BOOK COMMAND: PASSED ----------
 
+key: value

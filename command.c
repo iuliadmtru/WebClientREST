@@ -230,15 +230,24 @@ int client_register(client_t client, command_data_t cmd_data)
     // Compute message.
     char *payload = serialize_register(cmd_data);
     char *message = compute_post_request(client.host_ip, PATH_REGISTER, PAYLOAD_TYPE, payload, 2, NULL, 0);
-    free(payload);
 
     // Send message.
     send_to_server(client.sockfd, message);
+
+    // Receive message.
     char *response = receive_from_server(client.sockfd);
 
     printf("\nResponse from server:\n%s\n", response);
 
+
     // TODO: Return JSON.
+
+    // printf("object: %s\n", );
+
+    // Free resources.
+    free(payload);
+    free(message);
+    free(response);
 
     return 0;
 }

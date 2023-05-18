@@ -24,6 +24,8 @@ char *receive_from_server(int sockfd);
 // shows the current error
 void error(const char *msg);
 
+char *recover_payload(char *server_response);
+
 // // closes a server connection on socket sockfd
 // void close_connection(int sockfd);
 

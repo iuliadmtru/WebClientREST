@@ -89,10 +89,25 @@ void test_user_input(FILE *fin, FILE *fout, FILE *dev_null)
 }
 
 
+void test_recover_payload(FILE *fin, FILE *fout, FILE *dev_null)
+{
+    char *str = strdup("some\n{key: value} something \nabc.\n");
+    char *copy = str;
+
+    char *payload;
+    payload = strsep(&str, "{");
+    payload = strsep(&str, "}");
+    fprintf(fout, "%s\n", payload);
+
+    free(copy);
+}
+
+
 void run_tests(FILE *fin, FILE *fout, FILE *dev_null)
 {
     test_client_data(fin, fout, dev_null);
     test_user_input(fin, fout, dev_null);
+    test_recover_payload(fin, fout, dev_null);
 }
 
 int main()

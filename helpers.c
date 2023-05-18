@@ -33,7 +33,6 @@ void connection_open(client_t *client)
     if (connect(sockfd, (struct sockaddr*) &cli_addr, sizeof(cli_addr)) < 0)
         perror("ERROR connecting");
 
-    printf("Sockfd: %d\n", sockfd);
     client->sockfd = sockfd;
 }
 
@@ -122,6 +121,16 @@ void error(const char *msg)
 {
     perror(msg);
     exit(0);
+}
+
+char *recover_payload(char *server_response)
+{
+    char *payload;
+    while ((payload = strsep(&server_response, "{}")) != NULL) {
+        printf("payload: %s\n", payload);
+    }
+
+    return payload;
 }
 
 // void close_connection(int sockfd)
