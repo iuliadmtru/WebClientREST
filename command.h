@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include "client_utils.h"
 
 #define LINE_MAXLEN 256
 #define CMD_MAXLEN 14
@@ -12,6 +13,16 @@
 #define AUTHOR_MAXLEN 100
 #define GENRE_MAXLEN 100
 #define PUBLISHER_MAXLEN 100
+#define KEYVALUE_MAXLEN 1000
+// Paths.
+#define PATH_REGISTER "/api/v1/tema/auth/register"
+#define PATH_LOGIN "/api/v1/tema/auth/login"
+#define PATH_ACCESS "/api/v1/tema/library/access"
+#define PATH_BOOKS "/api/v1/tema/library/books"
+#define PATH_BOOK "/api/v1/tema/library/books/"  // + bookId
+#define PATH_LOGOUT "/api/v1/tema/auth/logout"
+// Payload.
+#define PAYLOAD_TYPE "application/json"
 
 enum commands {REGISTER,
                LOGIN,
@@ -50,8 +61,13 @@ command_data_t command_get_data(FILE *fin, FILE *fout, char *cmd);
 void command_data_print(command_data_t cmd_data);
 
 /*
+ * Register with a username and a password. Return -1 if the username exists.
+ */
+int client_register(client_t client, command_data_t cmd_data);
+
+/*
  * Close the connection and exit the program.
  */
-void client_exit(int sockfd);
+void client_exit(client_t client);
 
 #endif  // _COMMAND_H_

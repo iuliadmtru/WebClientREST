@@ -10,7 +10,7 @@
 #include "requests.h"
 
 char *compute_get_request(char *host, char *url, char *query_params,
-                            char **cookies, int cookies_count)
+                          char **cookies, int cookies_count)
 {
     char *message = calloc(BUFLEN, sizeof(char));
     char *line = calloc(LINELEN, sizeof(char));
@@ -48,8 +48,8 @@ char *compute_get_request(char *host, char *url, char *query_params,
     return message;
 }
 
-char *compute_post_request(char *host, char *url, char* content_type, char **body_data,
-                            int body_data_fields_count, char **cookies, int cookies_count)
+char *compute_post_request(char *host, char *url, char* content_type, char *body_data,
+                           int body_data_fields_count, char **cookies, int cookies_count)
 {
     char *message = calloc(BUFLEN, sizeof(char));
     char *line = calloc(LINELEN, sizeof(char));
@@ -58,10 +58,14 @@ char *compute_post_request(char *host, char *url, char* content_type, char **bod
     // Step 1: write the method name, URL and protocol type
     sprintf(line, "POST %s HTTP/1.1", url);
     compute_message(message, line);
+
+    printf("Message: %s\n", message);
     
     // Step 2: add the host
     sprintf(line, "Host: %s", host);
     compute_message(message, line);
+
+    printf("Message: %s\n", message);
 
     /* Step 3: add necessary headers (Content-Type and Content-Length are mandatory)
             in order to write Content-Length you must first compute the message size
@@ -69,19 +73,23 @@ char *compute_post_request(char *host, char *url, char* content_type, char **bod
     sprintf(line, "Content-Type: %s", content_type);
     compute_message(message, line);
 
+    printf("Message: %s\n", message);
+
     // "val1=dummy&val2=altceva"
     // copy to buffer
 
-    int i;
-    for (i = 0; i < body_data_fields_count - 1; i++) {
-        strcat(body_data_buffer, body_data[i]);
-        strcat(body_data_buffer, "&");
-    }
-    strcat(body_data_buffer, body_data[i]);
+    // int i;
+    // for (i = 0; i < body_data_fields_count - 1; i++) {
+    //     strcat(body_data_buffer, body_data[i]);
+    //     strcat(body_data_buffer, "&");
+    // }
+    // strcat(body_data_buffer, body_data[i]);
     // printf("Data buffer: %s\n", body_data_buffer);
 
-    sprintf(line, "Content-Length: %ld", strlen(body_data_buffer));
+    sprintf(line, "Content-Length: %ld", strlen(body_data));
     compute_message(message, line);
+
+    printf("Message: %s\n", message);
 
     // Step 4 (optional): add cookies
     if (cookies != NULL) {
@@ -91,10 +99,12 @@ char *compute_post_request(char *host, char *url, char* content_type, char **bod
     // Step 5: add new line at end of header
     compute_message(message, "");
 
+    printf("Message: %s\n", message);
+
     // Step 6: add the actual payload data
     memset(line, 0, LINELEN);
-    strcat(message, body_data_buffer);
-    // printf("Final message: %s\n", message);
+    strcat(message, body_data);
+    printf("Final message: %s\n", message);
 
     free(line);
     return message;

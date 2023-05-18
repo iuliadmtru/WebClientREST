@@ -8,7 +8,7 @@
 // #include <arpa/inet.h>
 
 // #include "requests.h"
-#include "server_utils.h"
+#include "client_utils.h"
 #include "helpers.h"
 #include "command.h"
 
@@ -20,8 +20,8 @@ int main(int argc, char *argv[])
     char cmd[CMD_MAXLEN];
 
     // Initialize server ip and port and connect to the server.
-    server_t server = server_init(SERVERADDR, SERVERPORT);
-    int sockfd = connection_open(server);
+    client_t client = client_init(SERVERADDR, SERVERPORT);
+    connection_open(&client);
 
     while (1) {
         // Parse user command.
@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
 
         switch (cmd_data.command) {
             case REGISTER:
+                client_register(client, cmd_data);
                 break;
             case LOGIN:
                 break;
@@ -46,7 +47,7 @@ int main(int argc, char *argv[])
             case LOGOUT:
                 break;
             case EXIT:
-                client_exit(sockfd);
+                client_exit(client);
                 break;
             case UNDEFINED:
                 fprintf(stderr, "Unknown command\n");

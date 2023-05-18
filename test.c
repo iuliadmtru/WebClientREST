@@ -4,18 +4,18 @@
 #include <stdlib.h>
 
 #include "command.h"
-#include "server_utils.h"
+#include "client_utils.h"
 #include "helpers.h"
 
-void test_server_data(FILE *fin, FILE *fout, FILE *dev_null)
+void test_client_data(FILE *fin, FILE *fout, FILE *dev_null)
 {
-    fprintf(fout, "---------- TEST SERVER DATA ----------\n");
+    fprintf(fout, "---------- TEST CLIENT DATA ----------\n");
 
-    server_t server = server_init(SERVERADDR, SERVERPORT);
-    assert(strcmp(server.ip, SERVERADDR) == 0);
-    assert(server.port == SERVERPORT);
+    client_t client = client_init(SERVERADDR, SERVERPORT);
+    assert(strcmp(client.host_ip, SERVERADDR) == 0);
+    assert(client.host_port == SERVERPORT);
 
-    fprintf(fout, "---------- TEST SERVER DATA: PASSED ----------\n\n");
+    fprintf(fout, "---------- TEST CLIENT DATA: PASSED ----------\n\n");
 }
 
 void test_register_command(FILE *fin, FILE *fout, FILE *dev_null)
@@ -91,7 +91,7 @@ void test_user_input(FILE *fin, FILE *fout, FILE *dev_null)
 
 void run_tests(FILE *fin, FILE *fout, FILE *dev_null)
 {
-    test_server_data(fin, fout, dev_null);
+    test_client_data(fin, fout, dev_null);
     test_user_input(fin, fout, dev_null);
 }
 

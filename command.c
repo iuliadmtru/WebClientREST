@@ -3,7 +3,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "client_utils.h"
 #include "command.h"
+#include "requests.h"
+#include "helpers.h"
+#include "parson.h"
 
 void command_parse(FILE *fin, char *cmd)
 {
@@ -167,8 +171,94 @@ void command_data_print(command_data_t cmd_data)
     }
 }
 
-void client_exit(int sockfd)
+void payload_print(char *payload[], int size)
 {
-    close(sockfd);
+    for (int i = 0; i < size; i++) {
+        printf("Payload[%d]: %s\n", i, payload[i]);
+    }
+}
+
+void generate_payload(char *payload[], command_data_t cmd_data)
+{
+    switch(cmd_data.command) {
+        case REGISTER:
+        {
+            printf("Generate payload for register\n");
+
+            char username[KEYVALUE_MAXLEN];
+            strcpy(username, "username: ");
+            strlcat(username, cmd_data.username, KEYVALUE_MAXLEN);
+            payload[0] = username;
+
+            printf("username payload: %s\n", payload[0]);
+
+            char password[KEYVALUE_MAXLEN];
+            strcpy(password, "password: ");
+            strlcat(password, cmd_data.password, KEYVALUE_MAXLEN);
+            payload[1] = password;
+
+            printf("password payload: %s\n", payload[1]);
+
+            payload_print(payload, 2);
+
+            break;
+        }
+        case LOGIN:
+            break;
+        case ENTER_LIBRARY:
+            break;
+        case GET_BOOKS:
+            break;
+        case GET_BOOK:
+            break;
+        case ADD_BOOK:
+            break;
+        case DELETE_BOOK:
+            break;
+        case LOGOUT:
+            break;
+        case EXIT:
+            break;
+        case UNDEFINED:
+            break;
+    }
+}
+
+int client_register(client_t client, command_data_t cmd_data)
+{
+    // Compute message.
+    // char *payload[2];
+    // generate_payload(payload, cmd_data);
+
+    // payload_print(payload, 2);
+
+    client_print(client);
+
+    JSON_Value *root_value = json_value_init_object();
+    JSON_Object *root_object = json_value_get_object(root_value);
+
+    json_object_set_string(root_object, "username", cmd_data.username);
+    json_object_set_string(root_object, "password", cmd_data.password);
+
+    char *serialized_string = NULL;
+    serialized_string = json_serialize_to_string_pretty(root_value);
+
+    char *message = compute_post_request(client.host_ip, PATH_LOGIN, PAYLOAD_TYPE, serialized_string, 2, NULL, 0);
+
+    // Send message.
+    send_to_server(client.sockfd, message);
+    char *response = receive_from_server(client.sockfd);
+
+    printf("\nResponse from server:\n%s\n", response);
+
+    json_free_serialized_string(serialized_string);
+    json_value_free(root_value);
+
+    return 0;
+}
+
+void client_exit(client_t client)
+{
+    close(client.sockfd);
     exit(0);
 }
