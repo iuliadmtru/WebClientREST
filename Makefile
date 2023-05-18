@@ -17,6 +17,9 @@ test: test.c $(DEPS)
 	$(CC) $(CFLAGS) -o test test.c $(SRCS)
 
 run_test: test
+	./test && ((cmp tests.ref tests.out && echo 'PASSED') || echo 'FAILED')
+
+run_test_valgrind: test
 	valgrind --track-origins=yes ./test && ((cmp tests.ref tests.out && echo 'PASSED') || echo 'FAILED')
 
 clean:

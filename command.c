@@ -19,7 +19,7 @@ void command_parse(FILE *fin, char *cmd)
 command_data_t command_get_data_register(FILE *fin, FILE *fout)
 {
     command_data_t cmd_data;
-    int empty = -1;
+    memset(&cmd_data, 0, sizeof(command_data_t));
 
     cmd_data.command = REGISTER;
     fprintf(fout, "username=");
@@ -30,21 +30,13 @@ command_data_t command_get_data_register(FILE *fin, FILE *fout)
     fgets(cmd_data.password, PASSWORD_MAXLEN, fin);
     cmd_data.password[strcspn(cmd_data.password, "\n")] = 0;
 
-    // The rest of the fields are empty.
-    strcpy(cmd_data.book_author, "");
-    strcpy(cmd_data.book_genre, "");
-    strcpy(cmd_data.book_title, "");
-    strcpy(cmd_data.book_publisher, "");
-    memcpy(&cmd_data.book_id, &empty, sizeof(empty));
-    memcpy(&cmd_data.book_page_count, &empty, sizeof(empty));
-
     return cmd_data;
 }
 
 command_data_t command_get_data_login(FILE *fin, FILE *fout)
 {
     command_data_t cmd_data;
-    int empty = -1;
+    memset(&cmd_data, 0, sizeof(command_data_t));
 
     cmd_data.command = LOGIN;
     fprintf(fout, "username=");
@@ -55,32 +47,14 @@ command_data_t command_get_data_login(FILE *fin, FILE *fout)
     fgets(cmd_data.password, PASSWORD_MAXLEN, fin);
     cmd_data.password[strcspn(cmd_data.password, "\n")] = 0;
 
-    // The rest of the fields are empty.
-    strcpy(cmd_data.book_author, "");
-    strcpy(cmd_data.book_genre, "");
-    strcpy(cmd_data.book_title, "");
-    strcpy(cmd_data.book_publisher, "");
-    memcpy(&cmd_data.book_id, &empty, sizeof(empty));
-    memcpy(&cmd_data.book_page_count, &empty, sizeof(empty));
-
     return cmd_data;
 }
 
 command_data_t command_get_data_enter_library(FILE *fin, FILE *fout)
 {
     command_data_t cmd_data;
-    int empty = -1;
-
+    memset(&cmd_data, 0, sizeof(command_data_t));
     cmd_data.command = ENTER_LIBRARY;
-    // The rest of the fields are empty.
-    strcpy(cmd_data.username, "");
-    strcpy(cmd_data.password, "");
-    strcpy(cmd_data.book_author, "");
-    strcpy(cmd_data.book_genre, "");
-    strcpy(cmd_data.book_title, "");
-    strcpy(cmd_data.book_publisher, "");
-    memcpy(&cmd_data.book_id, &empty, sizeof(empty));
-    memcpy(&cmd_data.book_page_count, &empty, sizeof(empty));
 
     return cmd_data;
 }
@@ -88,18 +62,8 @@ command_data_t command_get_data_enter_library(FILE *fin, FILE *fout)
 command_data_t command_get_data_get_books(FILE *fin, FILE *fout)
 {
     command_data_t cmd_data;
-    int empty = -1;
-
+    memset(&cmd_data, 0, sizeof(command_data_t));
     cmd_data.command = GET_BOOKS;
-    // The rest of the fields are empty.
-    strcpy(cmd_data.username, "");
-    strcpy(cmd_data.password, "");
-    strcpy(cmd_data.book_author, "");
-    strcpy(cmd_data.book_genre, "");
-    strcpy(cmd_data.book_title, "");
-    strcpy(cmd_data.book_publisher, "");
-    memcpy(&cmd_data.book_id, &empty, sizeof(empty));
-    memcpy(&cmd_data.book_page_count, &empty, sizeof(empty));
 
     return cmd_data;
 }
@@ -107,7 +71,7 @@ command_data_t command_get_data_get_books(FILE *fin, FILE *fout)
 command_data_t command_get_data_get_book(FILE *fin, FILE *fout)
 {
     command_data_t cmd_data;
-    int empty = -1;
+    memset(&cmd_data, 0, sizeof(command_data_t));
 
     cmd_data.command = GET_BOOK;
     fprintf(fout, "id=");
@@ -115,22 +79,13 @@ command_data_t command_get_data_get_book(FILE *fin, FILE *fout)
     fgets(buf, LINE_MAXLEN, fin);
     sscanf(buf, "%d", &cmd_data.book_id);
 
-    // The rest of the fields are empty.
-    strcpy(cmd_data.username, "");
-    strcpy(cmd_data.password, "");
-    strcpy(cmd_data.book_author, "");
-    strcpy(cmd_data.book_genre, "");
-    strcpy(cmd_data.book_title, "");
-    strcpy(cmd_data.book_publisher, "");
-    memcpy(&cmd_data.book_page_count, &empty, sizeof(empty));
-
     return cmd_data;
 }
 
 command_data_t command_get_data_add_book(FILE *fin, FILE *fout)
 {
     command_data_t cmd_data;
-    int empty = -1;
+    memset(&cmd_data, 0, sizeof(command_data_t));
 
     cmd_data.command = ADD_BOOK;
     fprintf(fout, "title=");
@@ -154,18 +109,13 @@ command_data_t command_get_data_add_book(FILE *fin, FILE *fout)
     fgets(buf, LINE_MAXLEN, fin);
     sscanf(buf, "%d", &cmd_data.book_page_count);
 
-    // The rest of the fields are empty.
-    strcpy(cmd_data.username, "");
-    strcpy(cmd_data.password, "");
-    memcpy(&cmd_data.book_id, &empty, sizeof(empty));
-
     return cmd_data;
 }
 
 command_data_t command_get_data_delete_book(FILE *fin, FILE *fout)
 {
     command_data_t cmd_data;
-    int empty = -1;
+    memset(&cmd_data, 0, sizeof(command_data_t));
 
     cmd_data.command = DELETE_BOOK;
     fprintf(fout, "id=");
@@ -173,33 +123,14 @@ command_data_t command_get_data_delete_book(FILE *fin, FILE *fout)
     fgets(buf, LINE_MAXLEN, fin);
     sscanf(buf, "%d", &cmd_data.book_id);
 
-    // The rest of the fields are empty.
-    strcpy(cmd_data.username, "");
-    strcpy(cmd_data.password, "");
-    strcpy(cmd_data.book_author, "");
-    strcpy(cmd_data.book_genre, "");
-    strcpy(cmd_data.book_title, "");
-    strcpy(cmd_data.book_publisher, "");
-    memcpy(&cmd_data.book_page_count, &empty, sizeof(empty));
-
     return cmd_data;
 }
 
 command_data_t command_get_data_logout(FILE *fin, FILE *fout)
 {
     command_data_t cmd_data;
-    int empty = -1;
-
+    memset(&cmd_data, 0, sizeof(command_data_t));
     cmd_data.command = LOGOUT;
-    // The rest of the fields are empty.
-    strcpy(cmd_data.username, "");
-    strcpy(cmd_data.password, "");
-    strcpy(cmd_data.book_author, "");
-    strcpy(cmd_data.book_genre, "");
-    strcpy(cmd_data.book_title, "");
-    strcpy(cmd_data.book_publisher, "");
-    memcpy(&cmd_data.book_id, &empty, sizeof(empty));
-    memcpy(&cmd_data.book_page_count, &empty, sizeof(empty));
 
     return cmd_data;
 }
@@ -207,18 +138,8 @@ command_data_t command_get_data_logout(FILE *fin, FILE *fout)
 command_data_t command_get_data_exit(FILE *fin, FILE *fout)
 {
     command_data_t cmd_data;
-    int empty = -1;
-
+    memset(&cmd_data, 0, sizeof(command_data_t));
     cmd_data.command = EXIT;
-    // The rest of the fields are empty.
-    strcpy(cmd_data.username, "");
-    strcpy(cmd_data.password, "");
-    strcpy(cmd_data.book_author, "");
-    strcpy(cmd_data.book_genre, "");
-    strcpy(cmd_data.book_title, "");
-    strcpy(cmd_data.book_publisher, "");
-    memcpy(&cmd_data.book_id, &empty, sizeof(empty));
-    memcpy(&cmd_data.book_page_count, &empty, sizeof(empty));
 
     return cmd_data;
 }
@@ -226,17 +147,8 @@ command_data_t command_get_data_exit(FILE *fin, FILE *fout)
 command_data_t command_get_data_undefined(FILE *fin, FILE *fout)
 {
     command_data_t cmd_data;
-    int empty = -1;
-
+    memset(&cmd_data, 0, sizeof(command_data_t));
     cmd_data.command = UNDEFINED;
-    strcpy(cmd_data.username, "");
-    strcpy(cmd_data.password, "");
-    strcpy(cmd_data.book_author, "");
-    strcpy(cmd_data.book_genre, "");
-    strcpy(cmd_data.book_title, "");
-    strcpy(cmd_data.book_publisher, "");
-    memcpy(&cmd_data.book_id, &empty, sizeof(empty));
-    memcpy(&cmd_data.book_page_count, &empty, sizeof(empty));
 
     return cmd_data;
 }
