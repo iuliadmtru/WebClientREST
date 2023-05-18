@@ -5,6 +5,7 @@
 #include <unistd.h>
 
 #include "client_utils.h"
+#include "cookie.h"
 
 client_t *client_init(char *ip, uint16_t port)
 {
@@ -21,7 +22,13 @@ client_t *client_init(char *ip, uint16_t port)
 void client_destroy(client_t *client)
 {
     close(client->sockfd);
+    cookie_destroy(client->cookie);
     free(client);
+}
+
+void client_add_cookie(client_t *client, cookie_t *cookie)
+{
+    client->cookie = cookie;
 }
 
 void client_print(client_t *client)
@@ -31,6 +38,7 @@ void client_print(client_t *client)
     printf("\tHost port: %hu\n", client->host_port);
     printf("\tSocket file descriptor: %d\n", client->sockfd);
     printf("\tError message: %s\n", client->error_message);
+    cookie_print(client->cookie, stdout);
 }
 
 void client_treat_error(client_t *client, FILE *fout)

@@ -129,14 +129,15 @@ cookie_t *recover_cookie(char *server_response)
 {
     cookie_t *cookie = cookie_create();
 
-    char *field;
-    field = strstr(server_response, "Set-Cookie: ");
-    while ((field = strsep(&server_response, "; ")) != NULL) {
-        cookie->cookie[cookie->fields_num] = strdup(field);
-        cookie->fields_num++;
-    }
+    // Find the line with the cookie.
+    char *field = strstr(server_response, "Set-Cookie:");
+    // Keep only the cookie line and consume the key.
+    server_response = strsep(&field, "\n");
+    field = strsep(&server_response, " ");
 
-    cookie_print(cookie, stdout);
+    while ((field = strsep(&server_response, " ")) != NULL) {
+        cookie_add_field(cookie, field);
+    }
 
     return cookie;
 }

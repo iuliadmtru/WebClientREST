@@ -287,10 +287,9 @@ int client_login(client_t *client, command_data_t cmd_data)
     // Receive message.
     char *response = receive_from_server(client->sockfd);
 
-    printf("Server response LOGIN:\n%s\n", response);
-
     // Store cookie.
     cookie_t *login_cookie = recover_cookie(response);
+    client_add_cookie(client, login_cookie);
 
     // Treat (potential) errors.
     char *payload = recover_payload(response);
