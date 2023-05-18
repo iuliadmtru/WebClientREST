@@ -16,7 +16,7 @@ char *compute_get_request(char *host, char *url, char *query_params,
     char *line = calloc(LINELEN, sizeof(char));
     char *body_data_buffer = calloc(LINELEN, sizeof(char));
 
-    // Step 1: write the method name, URL, request params (if any) and protocol type
+    // Write the method name, URL, request params (if any) and protocol type.
     if (query_params != NULL) {
         sprintf(line, "GET %s?%s HTTP/1.1", url, query_params);
     } else {
@@ -25,11 +25,11 @@ char *compute_get_request(char *host, char *url, char *query_params,
 
     compute_message(message, line);
 
-    // Step 2: add the host
+    // Add the host.
     sprintf(line, "Host: %s", host);
     compute_message(message, line);
 
-    // Step 3 (optional): add headers and/or cookies, according to the protocol format
+    // Add cookies.
     if (cookies != NULL) {
         int i;
         for (i = 0; i < cookies_count; i++) {
@@ -43,8 +43,13 @@ char *compute_get_request(char *host, char *url, char *query_params,
         compute_message(message, line);
     }
 
-    // Step 4: add final new line
+    // Add final new line.
     compute_message(message, "");
+
+    // Free resources.
+    free(body_data_buffer);
+    free(line);
+
     return message;
 }
 

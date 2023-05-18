@@ -34,6 +34,12 @@ void client_add_cookie(client_t *client, cookie_t *cookie)
     }
 }
 
+void client_remove_cookie(client_t *client)
+{
+    cookie_destroy(client->cookie);
+    client->cookie = NULL;
+}
+
 void client_print(client_t *client)
 {
     printf("Client:\n");

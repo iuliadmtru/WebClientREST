@@ -35,6 +35,8 @@ cookie_t *recover_cookie(char *server_response);
 
 char *recover_payload(char *server_response);
 
+void store_success_message(client_t *client, int cmd);
+
 int treat_server_error(client_t *client,
                        char *payload,
                        command_data_t cmd_data);

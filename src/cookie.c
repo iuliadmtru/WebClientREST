@@ -1,5 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+
 #include "cookie.h"
 
 cookie_t *cookie_create()
@@ -29,6 +31,30 @@ void cookie_add_field(cookie_t *cookie, char *field)
     
     cookie->cookie[cookie->fields_num] = new_field;
     cookie->fields_num++;
+}
+
+char *cookie_to_string(cookie_t *cookie)
+{
+    int last = cookie->fields_num - 1;
+    int total_len = 0;
+    for (int i = 0; i <= last; i++) {
+        total_len += strlen(cookie->cookie[i]) + 1;
+    }
+
+    char *cookie_str = malloc(total_len);
+    char *dst = cookie_str;
+    for (int i = 0; i < last; i++) {
+        int len = strlen(cookie->cookie[i]);
+        memcpy(dst, cookie->cookie[i], len);
+        memcpy(dst + len, " ", 1);
+        dst += (len + 1);
+    }
+
+    strcpy(dst, cookie->cookie[last]);
+
+    // printf("cookie_str: %s\n", cookie_str);
+
+    return cookie_str;
 }
 
 void cookie_print(cookie_t *cookie, FILE *fout)

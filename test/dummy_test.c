@@ -104,6 +104,15 @@ void test_recover_payload(FILE *fin, FILE *fout, FILE *dev_null)
     free(copy);
 }
 
+void test_cookie_to_str(cookie_t *cookie)
+{
+    char *str = "connect.sid=s\%3Av-h--chmE7lx-WWdMi1ZuYvaQu0o7oFd.\%2Ft7MGSAaEsN17ktOWUVrlyyLBr2AOFhU6nIKODy0U5Y; Path=/; HttpOnly";
+    char *cookie_str = cookie_to_string(cookie);
+    assert(strcmp(cookie_str, str) == 0);
+
+    free(cookie_str);
+}
+
 void test_recover_cookie(FILE *fin, FILE *fout, FILE *dev_null)
 {
     cookie_t *cookie = cookie_create();
@@ -122,7 +131,10 @@ void test_recover_cookie(FILE *fin, FILE *fout, FILE *dev_null)
         cookie_add_field(cookie, field);
     }
 
+    // cookie_print(cookie, fout);
     cookie_print(cookie, fout);
+
+    test_cookie_to_str(cookie);
 
     free(copy);
     cookie_destroy(cookie);

@@ -158,13 +158,19 @@ void store_success_message(client_t *client, int cmd)
     switch (cmd) {
         case REGISTER:
             strcpy(client->error_message,
-                "200 - OK - Registration successful!");
+                   "200 - OK - Registration successful!");
             break;
         case LOGIN:
             strcpy(client->error_message,
-                "200 - OK - Login successful!");
+                   "200 - OK - Login successful!");
             break;
-        case UNDEFINED:
+        case LOGOUT:
+            strcpy(client->error_message,
+                   "200 - OK - Logout successful!");
+            break;
+        default:
+            strcpy(client->error_message,
+                   "400 - ERROR - Unknown command!");
             break;
     }
 }

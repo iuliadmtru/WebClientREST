@@ -1,6 +1,7 @@
 #include "parson.h"
 #include "command.h"
 #include "serialize.h"
+#include "cookie.h"
 
 char *serialize_register(command_data_t cmd_data)
 {
@@ -30,4 +31,17 @@ char *serialize_login(command_data_t cmd_data)
     json_value_free(root_value);
 
     return serialized_string;
+}
+
+char **serialize_logout(cookie_t *cookie)
+{
+    char *cookies[1];
+    int total_len = 0;
+    for (int i = 0; i < cookie->fields_num; i++) {
+        total_len += strlen(cookie->cookie[i]) + 1;
+    }
+
+    // cookies[0] = 
+
+    return NULL;
 }

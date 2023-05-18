@@ -17,6 +17,8 @@ void cookie_destroy(cookie_t *cookie);
 
 void cookie_add_field(cookie_t *cookie, char *field);
 
+char *cookie_to_string(cookie_t *cookie);
+
 void cookie_print(cookie_t *cookie, FILE *fout);
 
 #endif  // _COOKIE_H_

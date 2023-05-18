@@ -28,6 +28,8 @@ void client_destroy(client_t *client);
 
 void client_add_cookie(client_t *client, cookie_t *cookie);
 
+void client_remove_cookie(client_t *client);
+
 void client_print(client_t *client);
 
 void client_treat_error(client_t *client, FILE *fout);
