@@ -118,17 +118,11 @@ void test_recover_cookie(FILE *fin, FILE *fout, FILE *dev_null)
     str = strsep(&field, "\n");
     field = strsep(&str, " ");
 
-    printf("str:\n%s\n\n", str);
-    printf("field:\n%s\n\n", field);
-
     while ((field = strsep(&str, " ")) != NULL) {
-        printf("field %d:\n'%s'\n\n", cookie->fields_num, field);
-
-        cookie->cookie[cookie->fields_num] = strdup(field);
-        cookie->fields_num++;
+        cookie_add_field(cookie, field);
     }
 
-    cookie_print(cookie);
+    cookie_print(cookie, fout);
 
     free(copy);
     cookie_destroy(cookie);

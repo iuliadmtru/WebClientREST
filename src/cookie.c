@@ -18,11 +18,21 @@ void cookie_destroy(cookie_t *cookie)
     free(cookie);
 }
 
-void cookie_print(cookie_t *cookie)
+void cookie_add_field(cookie_t *cookie, char *field)
 {
-    printf("Cookie:\n");
-    printf("\tNumber of fields: %d\n", cookie->fields_num);
+    char *new_field = strdup(field);
+    if (!new_field)
+        return;
+    
+    cookie->cookie[cookie->fields_num] = new_field;
+    cookie->fields_num++;
+}
+
+void cookie_print(cookie_t *cookie, FILE *fout)
+{
+    fprintf(fout, "Cookie:\n");
+    fprintf(fout, "\tNumber of fields: %d\n", cookie->fields_num);
     for (int i = 0; i < cookie->fields_num; i++) {
-        printf("\tField %d: %s\n", i, cookie->cookie[i]);
+        fprintf(fout, "\tField %d: %s\n", i, cookie->cookie[i]);
     }
 }

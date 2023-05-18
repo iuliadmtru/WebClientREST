@@ -136,7 +136,7 @@ cookie_t *recover_cookie(char *server_response)
         cookie->fields_num++;
     }
 
-    cookie_print(cookie);
+    cookie_print(cookie, stdout);
 
     return cookie;
 }

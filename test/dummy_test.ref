@@ -17,3 +17,8 @@
 ---------- TEST DELETE BOOK COMMAND: PASSED ----------
 
 key: value
+Cookie:
+	Number of fields: 3
+	Field 0: connect.sid=s%3Av-h--chmE7lx-WWdMi1ZuYvaQu0o7oFd.%2Ft7MGSAaEsN17ktOWUVrlyyLBr2AOFhU6nIKODy0U5Y;
+	Field 1: Path=/;
+	Field 2: HttpOnly
