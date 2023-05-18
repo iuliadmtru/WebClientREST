@@ -1,11 +1,14 @@
 CC=gcc
 CFLAGS=-I -Wall.
 
-client: client.c parson.* helpers.* client_utils.* command.* requests.* buffer.*
-	$(CC) $(CFLAGS) -o client client.c parson.c helpers.c client_utils.c command.c requests.c buffer.c
+client: client.c parson.* helpers.* client_utils.* command.* requests.* buffer.* serialize.*
+	$(CC) $(CFLAGS) -o client client.c parson.c helpers.c client_utils.c command.c requests.c buffer.c serialize.c
 
 run: client
 	./client
+
+run_valgrind: client
+	valgrind --track-origins=yes ./client
 
 test: test.c command.* client_utils.* helpers.*
 	$(CC) $(CFLAGS) -o test test.c command.c client_utils.c helpers.c

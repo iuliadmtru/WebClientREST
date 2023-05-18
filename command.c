@@ -8,6 +8,7 @@
 #include "requests.h"
 #include "helpers.h"
 #include "parson.h"
+#include "serialize.h"
 
 void command_parse(FILE *fin, char *cmd)
 {
@@ -227,23 +228,9 @@ void generate_payload(char *payload[], command_data_t cmd_data)
 int client_register(client_t client, command_data_t cmd_data)
 {
     // Compute message.
-    // char *payload[2];
-    // generate_payload(payload, cmd_data);
-
-    // payload_print(payload, 2);
-
-    client_print(client);
-
-    JSON_Value *root_value = json_value_init_object();
-    JSON_Object *root_object = json_value_get_object(root_value);
-
-    json_object_set_string(root_object, "username", cmd_data.username);
-    json_object_set_string(root_object, "password", cmd_data.password);
-
-    char *serialized_string = NULL;
-    serialized_string = json_serialize_to_string_pretty(root_value);
-
-    char *message = compute_post_request(client.host_ip, PATH_LOGIN, PAYLOAD_TYPE, serialized_string, 2, NULL, 0);
+    char *payload = serialize_register(cmd_data);
+    char *message = compute_post_request(client.host_ip, PATH_REGISTER, PAYLOAD_TYPE, payload, 2, NULL, 0);
+    free(payload);
 
     // Send message.
     send_to_server(client.sockfd, message);
@@ -251,8 +238,7 @@ int client_register(client_t client, command_data_t cmd_data)
 
     printf("\nResponse from server:\n%s\n", response);
 
-    json_free_serialized_string(serialized_string);
-    json_value_free(root_value);
+    // TODO: Return JSON.
 
     return 0;
 }
