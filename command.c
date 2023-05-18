@@ -172,58 +172,58 @@ void command_data_print(command_data_t cmd_data)
     }
 }
 
-void payload_print(char *payload[], int size)
-{
-    for (int i = 0; i < size; i++) {
-        printf("Payload[%d]: %s\n", i, payload[i]);
-    }
-}
+// void payload_print(char *payload[], int size)
+// {
+//     for (int i = 0; i < size; i++) {
+//         printf("Payload[%d]: %s\n", i, payload[i]);
+//     }
+// }
 
-void generate_payload(char *payload[], command_data_t cmd_data)
-{
-    switch(cmd_data.command) {
-        case REGISTER:
-        {
-            printf("Generate payload for register\n");
+// void generate_payload(char *payload[], command_data_t cmd_data)
+// {
+//     switch(cmd_data.command) {
+//         case REGISTER:
+//         {
+//             printf("Generate payload for register\n");
 
-            char username[KEYVALUE_MAXLEN];
-            strcpy(username, "username: ");
-            strlcat(username, cmd_data.username, KEYVALUE_MAXLEN);
-            payload[0] = username;
+//             char username[KEYVALUE_MAXLEN];
+//             strcpy(username, "username: ");
+//             strlcat(username, cmd_data.username, KEYVALUE_MAXLEN);
+//             payload[0] = username;
 
-            printf("username payload: %s\n", payload[0]);
+//             printf("username payload: %s\n", payload[0]);
 
-            char password[KEYVALUE_MAXLEN];
-            strcpy(password, "password: ");
-            strlcat(password, cmd_data.password, KEYVALUE_MAXLEN);
-            payload[1] = password;
+//             char password[KEYVALUE_MAXLEN];
+//             strcpy(password, "password: ");
+//             strlcat(password, cmd_data.password, KEYVALUE_MAXLEN);
+//             payload[1] = password;
 
-            printf("password payload: %s\n", payload[1]);
+//             printf("password payload: %s\n", payload[1]);
 
-            payload_print(payload, 2);
+//             payload_print(payload, 2);
 
-            break;
-        }
-        case LOGIN:
-            break;
-        case ENTER_LIBRARY:
-            break;
-        case GET_BOOKS:
-            break;
-        case GET_BOOK:
-            break;
-        case ADD_BOOK:
-            break;
-        case DELETE_BOOK:
-            break;
-        case LOGOUT:
-            break;
-        case EXIT:
-            break;
-        case UNDEFINED:
-            break;
-    }
-}
+//             break;
+//         }
+//         case LOGIN:
+//             break;
+//         case ENTER_LIBRARY:
+//             break;
+//         case GET_BOOKS:
+//             break;
+//         case GET_BOOK:
+//             break;
+//         case ADD_BOOK:
+//             break;
+//         case DELETE_BOOK:
+//             break;
+//         case LOGOUT:
+//             break;
+//         case EXIT:
+//             break;
+//         case UNDEFINED:
+//             break;
+//     }
+// }
 
 int client_register(client_t client, command_data_t cmd_data)
 {
