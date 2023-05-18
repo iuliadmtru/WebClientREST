@@ -13,14 +13,20 @@ run: client
 run_valgrind: client
 	valgrind --track-origins=yes ./client
 
-test: test.c $(DEPS)
-	$(CC) $(CFLAGS) -o test test.c $(SRCS)
+dummy_test: dummy_test.c $(DEPS)
+	$(CC) $(CFLAGS) -o dummy_test dummy_test.c $(SRCS)
 
-run_test: test
-	./test && ((cmp tests.ref tests.out && echo 'PASSED') || echo 'FAILED')
+run_dummy_test: dummy_test
+	./dummy_test && ((cmp dummy_test.ref dummy_test.out && echo 'PASSED') || echo 'FAILED')
 
-run_test_valgrind: test
-	valgrind --track-origins=yes ./test && ((cmp tests.ref tests.out && echo 'PASSED') || echo 'FAILED')
+run_dummy_test_valgrind: dummy_test
+	valgrind --track-origins=yes ./dummy_test && ((cmp dummy_test.ref dummy_test.out && echo 'PASSED') || echo 'FAILED')
+
+run_tests: client
+	./client < tests.in > tests.out && ((cmp tests.ref tests.out && echo 'PASSED') || echo 'FAILED')
+
+run_tests_valgrind: client
+	valgrind --track-origins=yes ./client < tests.in > tests.out && ((cmp tests.ref tests.out && echo 'PASSED') || echo 'FAILED')
 
 clean:
 	rm -f *.o client test

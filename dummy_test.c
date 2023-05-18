@@ -113,8 +113,8 @@ void run_tests(FILE *fin, FILE *fout, FILE *dev_null)
 
 int main()
 {
-    FILE *fin = fopen("tests.in", "r");
-    FILE *fout = fopen("tests.out", "w");
+    FILE *fin = fopen("dummy_test.in", "r");
+    FILE *fout = fopen("dummy_test.out", "w");
     FILE *dev_null = fopen("/dev/null", "w");
 
     run_tests(fin, fout, dev_null);
