@@ -296,9 +296,9 @@ int client_login(client_t *client, command_data_t cmd_data)
     char *response = receive_from_server(client->sockfd);
     char *response_copy = response;
 
-    printf("\nServer response:\n");
-    printf("%s\n", response);
-    printf("\n");
+    // printf("\nServer response:\n");
+    // printf("%s\n", response);
+    // printf("\n");
 
     // Store cookie.
     cookie_t *session_cookie = recover_cookie(response_copy);
@@ -308,10 +308,6 @@ int client_login(client_t *client, command_data_t cmd_data)
     response_copy = response;
     char *payload = recover_payload(response);
     ret = treat_server_error(client, payload, cmd_data);
-
-    printf("\n");
-    client_print(client);
-    printf("\n");
 
     // Free resources.
     free(data);
@@ -360,11 +356,11 @@ int client_logout(client_t *client)
     }
 
     // Compute message.
-    // char *cookies[] = serialize_logout(client->cookie);
-    // char *message = compute_get_request(client->host_ip, PATH_LOGOUT, NULL, , 1);
-    char *message;
-
-    printf("logout message:\n%s\n", message);
+    char *message = compute_get_request(client->host_ip,
+                                        PATH_LOGOUT,
+                                        NULL,
+                                        client->cookie->cookie,
+                                        client->cookie->fields_num);
 
     // Send message.
     send_to_server(client->sockfd, message);
@@ -372,10 +368,6 @@ int client_logout(client_t *client)
     // Receive message.
     char *response = receive_from_server(client->sockfd);
     char *response_copy = response;
-
-    printf("\nServer response:\n");
-    printf("%s\n", response);
-    printf("\n");
 
     // Delete session cookie.
     client_remove_cookie(client);

@@ -8,6 +8,6 @@ char *serialize_register(command_data_t cmd_data);
 
 char *serialize_login(command_data_t cmd_data);
 
-char **serialize_logout(cookie_t *cookie);
+char *serialize_logout(cookie_t *cookie);
 
 #endif  // _SERIALIZE_H_

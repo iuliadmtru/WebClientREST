@@ -33,15 +33,7 @@ char *serialize_login(command_data_t cmd_data)
     return serialized_string;
 }
 
-char **serialize_logout(cookie_t *cookie)
+char *serialize_logout(cookie_t *cookie)
 {
-    char *cookies[1];
-    int total_len = 0;
-    for (int i = 0; i < cookie->fields_num; i++) {
-        total_len += strlen(cookie->cookie[i]) + 1;
-    }
-
-    // cookies[0] = 
-
-    return NULL;
+    return cookie_to_string(cookie);
 }

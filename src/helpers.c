@@ -138,6 +138,8 @@ cookie_t *recover_cookie(char *server_response)
 
     cookie_t *cookie = cookie_create();
     while ((field = strsep(&server_response, " ")) != NULL) {
+        // Remove trailing ';'.
+        field = strsep(&field, ";");
         cookie_add_field(cookie, field);
     }
 

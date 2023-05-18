@@ -2,3 +2,5 @@ username=password=The username iuliadmtru is taken!
 username=password=Credentials are not good!
 username=password=200 - OK - Login successful!
 username=password=Already logged in!
+200 - OK - Logout successful!
+Cannot logout - not logged in!

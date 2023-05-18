@@ -25,21 +25,23 @@ char *compute_get_request(char *host, char *url, char *query_params,
 
     compute_message(message, line);
 
-    // Add the host.
+    // Add host.
     sprintf(line, "Host: %s", host);
     compute_message(message, line);
 
     // Add cookies.
     if (cookies != NULL) {
         int i;
-        for (i = 0; i < cookies_count; i++) {
-            strcat(body_data_buffer, cookies[i]);
-            strcat(body_data_buffer, ";");
+        char *dst = body_data_buffer;
+        for (i = 0; i < cookies_count - 1; i++) {
+            int len = strlen(cookies[i]);
+            memcpy(dst, cookies[i], len);
+            memcpy(dst + len, "; ", 2);
+            dst += (len + 2);
         }
-        strcat(body_data_buffer, cookies[i]);
-        // printf("Data buffer: %s\n", body_data_buffer);
+        strcpy(dst, cookies[i]);
 
-        sprintf(line, "Set-Cookie: %ld", strlen(body_data_buffer));
+        sprintf(line, "Set-Cookie: %s", body_data_buffer);
         compute_message(message, line);
     }
 
