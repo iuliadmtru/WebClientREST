@@ -3,9 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "command.h"
-#include "client_utils.h"
-#include "helpers.h"
+#include "../src/command.h"
+#include "../src/client_utils.h"
+#include "../src/helpers.h"
 
 void test_client_data(FILE *fin, FILE *fout, FILE *dev_null)
 {

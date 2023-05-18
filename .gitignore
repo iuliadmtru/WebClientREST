@@ -1,4 +1,4 @@
-test.out
-test
+*.out
+dummy_test
 client
 .vscode/
