@@ -71,6 +71,11 @@ int client_register(client_t *client, command_data_t cmd_data);
 int client_login(client_t *client, command_data_t cmd_data);
 
 /*
+ * Access the library.
+ */
+int client_enter_library(client_t *client, command_data_t cmd_data);
+
+/*
  * Close the connection and exit the program.
  */
 void client_exit(client_t *client);

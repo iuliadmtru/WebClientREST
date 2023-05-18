@@ -3,6 +3,7 @@
 
 #include "client_utils.h"
 #include "command.h"
+#include "cookie.h"
 
 #define BUFLEN 4096
 #define LINELEN 1000
@@ -13,9 +14,6 @@ enum error_codes {USERNAME_UNAVAILABLE = -1,
                   ACCESS_DENIED = -4,
                   INVALID_ID = -5,
                   INCORRECT_DETAILS = -6};
-
-// #define BUFLEN 4096
-// #define LINELEN 1000
 
 // opens a connection with server, returns a socket
 void connection_open(client_t *client);
@@ -31,6 +29,8 @@ char *receive_from_server(int sockfd);
 
 // shows the current error
 void error(const char *msg);
+
+cookie_t *recover_cookie(char *server_response);
 
 char *recover_payload(char *server_response);
 

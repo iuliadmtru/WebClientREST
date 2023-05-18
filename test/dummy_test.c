@@ -6,6 +6,7 @@
 #include "../src/command.h"
 #include "../src/client_utils.h"
 #include "../src/helpers.h"
+#include "../src/cookie.h"
 
 void test_client_data(FILE *fin, FILE *fout, FILE *dev_null)
 {
@@ -103,18 +104,49 @@ void test_recover_payload(FILE *fin, FILE *fout, FILE *dev_null)
     free(copy);
 }
 
+void test_recover_cookie(FILE *fin, FILE *fout, FILE *dev_null)
+{
+    cookie_t *cookie = cookie_create();
+
+    char *str = strdup("X-XSS-Protection: 1; mode=block\nSet-Cookie: connect.sid=s\%3Av-h--chmE7lx-WWdMi1ZuYvaQu0o7oFd.\%2Ft7MGSAaEsN17ktOWUVrlyyLBr2AOFhU6nIKODy0U5Y; Path=/; HttpOnly\nDate: Thu, 18 May 2023 19:42:42 GMT");
+    char *copy = str;
+    char *field;
+
+    // Find the line with the cookie.
+    field = strstr(str, "Set-Cookie:");
+    // Keep only the cookie line and consume the key.
+    str = strsep(&field, "\n");
+    field = strsep(&str, " ");
+
+    printf("str:\n%s\n\n", str);
+    printf("field:\n%s\n\n", field);
+
+    while ((field = strsep(&str, " ")) != NULL) {
+        printf("field %d:\n'%s'\n\n", cookie->fields_num, field);
+
+        cookie->cookie[cookie->fields_num] = strdup(field);
+        cookie->fields_num++;
+    }
+
+    cookie_print(cookie);
+
+    free(copy);
+    cookie_destroy(cookie);
+}
+
 
 void run_tests(FILE *fin, FILE *fout, FILE *dev_null)
 {
     test_client_data(fin, fout, dev_null);
     test_user_input(fin, fout, dev_null);
     test_recover_payload(fin, fout, dev_null);
+    test_recover_cookie(fin, fout, dev_null);
 }
 
 int main()
 {
-    FILE *fin = fopen("dummy_test.in", "r");
-    FILE *fout = fopen("dummy_test.out", "w");
+    FILE *fin = fopen("test/dummy_test.in", "r");
+    FILE *fout = fopen("test/dummy_test.out", "w");
     FILE *dev_null = fopen("/dev/null", "w");
 
     run_tests(fin, fout, dev_null);

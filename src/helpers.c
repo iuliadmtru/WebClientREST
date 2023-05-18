@@ -11,6 +11,7 @@
 #include "helpers.h"
 #include "buffer.h"
 #include "command.h"
+#include "cookie.h"
 
 #define HEADER_TERMINATOR "\r\n\r\n"
 #define HEADER_TERMINATOR_SIZE (sizeof(HEADER_TERMINATOR) - 1)
@@ -122,6 +123,22 @@ void error(const char *msg)
 {
     perror(msg);
     exit(0);
+}
+
+cookie_t *recover_cookie(char *server_response)
+{
+    cookie_t *cookie = cookie_create();
+
+    char *field;
+    field = strstr(server_response, "Set-Cookie: ");
+    while ((field = strsep(&server_response, "; ")) != NULL) {
+        cookie->cookie[cookie->fields_num] = strdup(field);
+        cookie->fields_num++;
+    }
+
+    cookie_print(cookie);
+
+    return cookie;
 }
 
 char *recover_payload(char *server_response)
