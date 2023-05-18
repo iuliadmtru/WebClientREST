@@ -63,11 +63,11 @@ void command_data_print(command_data_t cmd_data);
 /*
  * Register with a username and a password. Return -1 if the username exists.
  */
-int client_register(client_t client, command_data_t cmd_data);
+int client_register(client_t *client, command_data_t cmd_data);
 
 /*
  * Close the connection and exit the program.
  */
-void client_exit(client_t client);
+void client_exit(client_t *client);
 
 #endif  // _COMMAND_H_

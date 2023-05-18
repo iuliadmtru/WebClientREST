@@ -11,9 +11,10 @@ void test_client_data(FILE *fin, FILE *fout, FILE *dev_null)
 {
     fprintf(fout, "---------- TEST CLIENT DATA ----------\n");
 
-    client_t client = client_init(SERVERADDR, SERVERPORT);
-    assert(strcmp(client.host_ip, SERVERADDR) == 0);
-    assert(client.host_port == SERVERPORT);
+    client_t *client = client_init(SERVERADDR, SERVERPORT);
+    assert(strcmp(client->host_ip, SERVERADDR) == 0);
+    assert(client->host_port == SERVERPORT);
+    client_destroy(client);
 
     fprintf(fout, "---------- TEST CLIENT DATA: PASSED ----------\n\n");
 }
@@ -120,6 +121,7 @@ int main()
 
     fclose(fin);
     fclose(fout);
+    fclose(dev_null);
 
     return 0;
 }

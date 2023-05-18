@@ -6,6 +6,13 @@
 #define BUFLEN 4096
 #define LINELEN 1000
 
+enum error_codes {USERNAME_UNAVAILABLE = -1,
+                  INVALID_CREDENTIALS = -2,
+                  NOT_LOGGED_IN = -3,
+                  ACCESS_DENIED = -4,
+                  INVALID_ID = -5,
+                  INCORRECT_DETAILS = -6};
+
 // #define BUFLEN 4096
 // #define LINELEN 1000
 
@@ -25,6 +32,8 @@ char *receive_from_server(int sockfd);
 void error(const char *msg);
 
 char *recover_payload(char *server_response);
+
+int treat_server_error(client_t *client, char *payload, FILE *fout);
 
 // // closes a server connection on socket sockfd
 // void close_connection(int sockfd);

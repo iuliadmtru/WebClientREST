@@ -10,6 +10,7 @@
 #include "client_utils.h"
 #include "helpers.h"
 #include "buffer.h"
+#include "command.h"
 
 #define HEADER_TERMINATOR "\r\n\r\n"
 #define HEADER_TERMINATOR_SIZE (sizeof(HEADER_TERMINATOR) - 1)
@@ -126,11 +127,36 @@ void error(const char *msg)
 char *recover_payload(char *server_response)
 {
     char *payload;
-    while ((payload = strsep(&server_response, "{}")) != NULL) {
-        printf("payload: %s\n", payload);
-    }
+    payload = strsep(&server_response, "{");
+    payload = strsep(&server_response, "}");
 
     return payload;
+}
+
+int treat_server_error(client_t *client, char *payload, FILE *fout)
+{
+    int ret = 0;
+    char *tmp;
+    char error_msg[ERROR_MSG_MAXLEN];
+
+    // Get the value of the payload (what is after ":"), if any.
+    while ((tmp = strsep(&payload, ":")) != NULL) {
+        strcpy(error_msg, tmp);
+        ret = 1;
+    }
+
+    if (ret) {
+        // Remove quotes.
+        int len = strlen(error_msg);
+        memmove(error_msg, error_msg + 1, len + 1);
+        error_msg[len - 2] = 0;
+
+        // Store error message.
+        memcpy(client->error_message, error_msg, strlen(error_msg) + 1);
+        ret = USERNAME_UNAVAILABLE;
+    }
+
+    return ret;
 }
 
 // void close_connection(int sockfd)

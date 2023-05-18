@@ -20,17 +20,19 @@ int main(int argc, char *argv[])
     char cmd[CMD_MAXLEN];
 
     // Initialize server ip and port and connect to the server.
-    client_t client = client_init(SERVERADDR, SERVERPORT);
-    connection_open(&client);
+    client_t *client = client_init(SERVERADDR, SERVERPORT);
+    connection_open(client);
 
     while (1) {
         // Parse user command.
         command_parse(stdin, cmd);
         command_data_t cmd_data = command_get_data(stdin, stdout, cmd);
 
+        int ret = 0;
         switch (cmd_data.command) {
             case REGISTER:
-                client_register(client, cmd_data);
+                ret = client_register(client, cmd_data);
+                printf("ret = %d\n", ret);
                 break;
             case LOGIN:
                 break;
@@ -53,6 +55,9 @@ int main(int argc, char *argv[])
                 fprintf(stderr, "Unknown command\n");
                 continue;
         }
+
+        if (ret < 0)
+            client_treat_error(client, stderr);
     }
 
     // // Ex 1.1: GET dummy from main server

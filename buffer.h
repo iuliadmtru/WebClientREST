@@ -1,3 +1,6 @@
+#ifndef _BUFFER_H_
+#define _BUFFER_H_
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,3 +29,5 @@ int buffer_find(buffer *buffer, const char *data, size_t data_size);
 // finds data of size data_size in a buffer in a
 // case-insensitive fashion and returns its position
 int buffer_find_insensitive(buffer *buffer, const char *data, size_t data_size);
+
+#endif  // _BUFFER_H_

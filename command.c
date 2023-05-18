@@ -238,34 +238,44 @@ void command_data_print(command_data_t cmd_data)
     }
 }
 
-int client_register(client_t client, command_data_t cmd_data)
+int client_register(client_t *client, command_data_t cmd_data)
 {
     // Compute message.
-    char *payload = serialize_register(cmd_data);
-    char *message = compute_post_request(client.host_ip, PATH_REGISTER, PAYLOAD_TYPE, payload, 2, NULL, 0);
+    char *data = serialize_register(cmd_data);
+    char *message = compute_post_request(client->host_ip,
+                                         PATH_REGISTER,
+                                         PAYLOAD_TYPE,
+                                         data,
+                                         2,
+                                         NULL,
+                                         0);
 
     // Send message.
-    send_to_server(client.sockfd, message);
+    send_to_server(client->sockfd, message);
 
     // Receive message.
-    char *response = receive_from_server(client.sockfd);
+    char *response = receive_from_server(client->sockfd);
 
-    printf("\nResponse from server:\n%s\n", response);
+    // printf("\nResponse from server:\n%s\n", response);
 
-    // TODO: Return JSON.
+    // Treat (potential) errors.
+    char *payload = recover_payload(response);
+    int ret = treat_server_error(client, payload, stderr);
 
-    // printf("object: %s\n", );
+    client_print(client);
 
     // Free resources.
-    free(payload);
+    free(data);
     free(message);
     free(response);
 
-    return 0;
+    client_print(client);
+
+    return ret;
 }
 
-void client_exit(client_t client)
+void client_exit(client_t *client)
 {
-    close(client.sockfd);
+    client_destroy(client);
     exit(0);
 }
