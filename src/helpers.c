@@ -166,6 +166,10 @@ void store_success_message(client_t *client, int cmd)
             strcpy(client->error_message,
                    "200 - OK - Login successful!");
             break;
+        case ENTER_LIBRARY:
+            strcpy(client->error_message,
+                   "200 - OK - Access permitted!");
+            break;
         case LOGOUT:
             strcpy(client->error_message,
                    "200 - OK - Logout successful!");

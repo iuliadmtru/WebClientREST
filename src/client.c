@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
                 ret = client_login(client, cmd_data);
                 break;
             case ENTER_LIBRARY:
-                ret = client_enter_library(client, cmd_data);  // TODO
+                ret = client_enter_library(client, cmd_data);
                 break;
             case GET_BOOKS:
                 break;

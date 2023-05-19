@@ -11,9 +11,9 @@
 void server_interaction_print(server_interaction_t *server_interaction)
 {
     printf("Server interaction:\n");
-    printf("******** Payload: ********\n%s\n", server_interaction->payload);
-    printf("******** Request: ********\n%s\n", server_interaction->request);
-    printf("******** Response: ********\\n%s\n", server_interaction->response);
+    printf("******** Payload: ********\n'%s'\n", server_interaction->payload);
+    printf("******** Request: ********\n'%s'\n", server_interaction->request);
+    printf("******** Response: ********\n'%s'\n", server_interaction->response);
 }
 
 server_interaction_t *server_interaction_create()
@@ -60,6 +60,9 @@ void server_interaction_init(server_interaction_t *server_interaction,
             break;
         case LOGIN:
             server_interaction->payload = serialize_login(cmd_data);
+
+            printf("payload: '%s'\n", server_interaction->payload);
+
             server_interaction->request =
                 compute_post_request(client->host_ip,
                                      PATH_LOGIN,
@@ -68,6 +71,20 @@ void server_interaction_init(server_interaction_t *server_interaction,
                                      2,
                                      NULL,
                                      0);
+
+            printf("request: '%s'\n", server_interaction->request);
+
+            // Send request and store response.
+            send_to_server(client->sockfd, server_interaction->request);
+            server_interaction->response = receive_from_server(client->sockfd);
+            break;
+        case ENTER_LIBRARY:
+            server_interaction->request =
+                compute_get_request(client->host_ip,
+                                    PATH_ACCESS,
+                                    NULL,
+                                    client->cookie->cookie,
+                                    client->cookie->fields_num);
             // Send request and store response.
             send_to_server(client->sockfd, server_interaction->request);
             server_interaction->response = receive_from_server(client->sockfd);

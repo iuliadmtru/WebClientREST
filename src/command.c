@@ -273,6 +273,10 @@ int client_register(client_t *client, command_data_t cmd_data)
 
 int client_login(client_t *client, command_data_t cmd_data)
 {
+    printf("Client before log in:\n");
+    client_print(client);
+    printf("\n");
+
     int ret;
 
     // If the client is already logged in, don't log in again.
@@ -285,9 +289,9 @@ int client_login(client_t *client, command_data_t cmd_data)
     server_interaction_t *server_interaction = server_interaction_create();
     server_interaction_init(server_interaction, client, cmd_data);
 
-    // printf("\n");
-    // server_interaction_print(server_interaction);
-    // printf("\n");
+    printf("\n");
+    server_interaction_print(server_interaction);
+    printf("\n");
 
     char *response_copy = server_interaction->response;
 
@@ -300,6 +304,10 @@ int client_login(client_t *client, command_data_t cmd_data)
     char *payload = recover_payload(response_copy);
     ret = treat_server_error(client, payload, cmd_data);
 
+    printf("Client after log in:\n");
+    client_print(client);
+    printf("\n");
+
     // Free resources.
     server_interaction_destroy(server_interaction);
 
@@ -308,32 +316,23 @@ int client_login(client_t *client, command_data_t cmd_data)
 
 int client_enter_library(client_t *client, command_data_t cmd_data)
 {
-    // Compute message.
-    char *data = serialize_login(cmd_data);
-    char *message = compute_post_request(client->host_ip,
-                                         PATH_LOGIN,
-                                         PAYLOAD_TYPE,
-                                         data,
-                                         2,
-                                         NULL,
-                                         0);
+    // Compute request and get response.
+    server_interaction_t *server_interaction = server_interaction_create();
+    server_interaction_init(server_interaction, client, cmd_data);
 
-    // Send message.
-    send_to_server(client->sockfd, message);
-
-    // Receive message.
-    char *response = receive_from_server(client->sockfd);
+    printf("\n");
+    server_interaction_print(server_interaction);
+    printf("\n");
 
     // Treat (potential) errors.
-    char *payload = recover_payload(response);
+    char *payload = recover_payload(server_interaction->response);
     int ret = treat_server_error(client, payload, cmd_data);
 
     // Free resources.
-    free(data);
-    free(message);
-    free(response);
+    server_interaction_destroy(server_interaction);
 
-    return ret;
+    return 0;
+    // return ret;
 }
 
 int client_logout(client_t *client, command_data_t cmd_data)
@@ -348,9 +347,17 @@ int client_logout(client_t *client, command_data_t cmd_data)
     server_interaction_t *server_interaction = server_interaction_create();
     server_interaction_init(server_interaction, client, cmd_data);
 
+    printf("\n");
+    server_interaction_print(server_interaction);
+    printf("\n");
+
     // Delete session cookie.
     client_remove_cookie(client);
     store_success_message(client, LOGOUT);
+
+    printf("Client after log out:\n");
+    client_print(client);
+    printf("\n");
 
     // Free resources.
     server_interaction_destroy(server_interaction);
