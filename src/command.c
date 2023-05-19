@@ -10,6 +10,7 @@
 #include "parson.h"
 #include "serialize.h"
 #include "cookie.h"
+#include "server_interaction.h"
 
 void command_parse(FILE *fin, char *cmd)
 {
@@ -241,30 +242,31 @@ void command_data_print(command_data_t cmd_data)
 
 int client_register(client_t *client, command_data_t cmd_data)
 {
-    // Compute message.
-    char *data = serialize_register(cmd_data);
-    char *message = compute_post_request(client->host_ip,
-                                         PATH_REGISTER,
-                                         PAYLOAD_TYPE,
-                                         data,
-                                         2,
-                                         NULL,
-                                         0);
+    // // Compute message.
+    // char *message = compute_post_request(client->host_ip,
+    //                                      PATH_REGISTER,
+    //                                      PAYLOAD_TYPE,
+    //                                      data,
+    //                                      2,
+    //                                      NULL,
+    //                                      0);
 
-    // Send message.
-    send_to_server(client->sockfd, message);
+    // // Send message.
+    // send_to_server(client->sockfd, message);
 
-    // Receive message.
-    char *response = receive_from_server(client->sockfd);
+    // // Receive message.
+    // char *response = receive_from_server(client->sockfd);
+
+    // Compute request and get response.
+    server_interaction_t *server_interaction = server_interaction_create();
+    server_interaction_init(server_interaction, client, cmd_data);
 
     // Treat (potential) errors.
-    char *payload = recover_payload(response);
+    char *payload = recover_payload(server_interaction->response);  // TODO: add this inside the next function
     int ret = treat_server_error(client, payload, cmd_data);
 
     // Free resources.
-    free(data);
-    free(message);
-    free(response);
+    server_interaction_destroy(server_interaction);
 
     return ret;
 }
@@ -278,41 +280,28 @@ int client_login(client_t *client, command_data_t cmd_data)
         strcpy(client->error_message, "Already logged in!");
         return ALREADY_LOGGED_IN;
     }
-    
-    // Compute message.
-    char *data = serialize_login(cmd_data);
-    char *message = compute_post_request(client->host_ip,
-                                         PATH_LOGIN,
-                                         PAYLOAD_TYPE,
-                                         data,
-                                         2,
-                                         NULL,
-                                         0);
 
-    // Send message.
-    send_to_server(client->sockfd, message);
+    // Compute request and get response.
+    server_interaction_t *server_interaction = server_interaction_create();
+    server_interaction_init(server_interaction, client, cmd_data);
 
-    // Receive message.
-    char *response = receive_from_server(client->sockfd);
-    char *response_copy = response;
-
-    // printf("\nServer response:\n");
-    // printf("%s\n", response);
     // printf("\n");
+    // server_interaction_print(server_interaction);
+    // printf("\n");
+
+    char *response_copy = server_interaction->response;
 
     // Store cookie.
     cookie_t *session_cookie = recover_cookie(response_copy);
     client_add_cookie(client, session_cookie);
 
     // Treat (potential) errors.
-    response_copy = response;
-    char *payload = recover_payload(response);
+    response_copy = server_interaction->response;
+    char *payload = recover_payload(response_copy);
     ret = treat_server_error(client, payload, cmd_data);
 
     // Free resources.
-    free(data);
-    free(message);
-    free(response);
+    server_interaction_destroy(server_interaction);
 
     return ret;
 }
