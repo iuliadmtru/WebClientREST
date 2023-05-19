@@ -60,13 +60,25 @@ void server_interaction_init(server_interaction_t *server_interaction,
             break;
         case LOGIN:
             server_interaction->payload = serialize_login(cmd_data);
-            server_interaction->request = compute_post_request(client->host_ip,
-                                                               PATH_LOGIN,
-                                                               PAYLOAD_TYPE,
-                                                               server_interaction->payload,
-                                                               2,
-                                                               NULL,
-                                                               0);
+            server_interaction->request =
+                compute_post_request(client->host_ip,
+                                     PATH_LOGIN,
+                                     PAYLOAD_TYPE,
+                                     server_interaction->payload,
+                                     2,
+                                     NULL,
+                                     0);
+            // Send request and store response.
+            send_to_server(client->sockfd, server_interaction->request);
+            server_interaction->response = receive_from_server(client->sockfd);
+            break;
+        case LOGOUT:
+            server_interaction->request =
+                compute_get_request(client->host_ip,
+                                    PATH_LOGOUT,
+                                    NULL,
+                                    client->cookie->cookie,
+                                    client->cookie->fields_num);
             // Send request and store response.
             send_to_server(client->sockfd, server_interaction->request);
             server_interaction->response = receive_from_server(client->sockfd);

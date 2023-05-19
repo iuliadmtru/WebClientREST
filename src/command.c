@@ -336,7 +336,7 @@ int client_enter_library(client_t *client, command_data_t cmd_data)
     return ret;
 }
 
-int client_logout(client_t *client)
+int client_logout(client_t *client, command_data_t cmd_data)
 {
     // If the client is not logged in, error.
     if (!client->cookie) {
@@ -344,27 +344,16 @@ int client_logout(client_t *client)
         return NOT_LOGGED_IN;
     }
 
-    // Compute message.
-    char *message = compute_get_request(client->host_ip,
-                                        PATH_LOGOUT,
-                                        NULL,
-                                        client->cookie->cookie,
-                                        client->cookie->fields_num);
-
-    // Send message.
-    send_to_server(client->sockfd, message);
-
-    // Receive message.
-    char *response = receive_from_server(client->sockfd);
-    char *response_copy = response;
+    // Compute request and get response.
+    server_interaction_t *server_interaction = server_interaction_create();
+    server_interaction_init(server_interaction, client, cmd_data);
 
     // Delete session cookie.
     client_remove_cookie(client);
     store_success_message(client, LOGOUT);
 
     // Free resources.
-    free(message);
-    free(response);
+    server_interaction_destroy(server_interaction);
 
     return 0;
 }

@@ -78,7 +78,7 @@ int client_enter_library(client_t *client, command_data_t cmd_data);
 /*
  * Logout (delete session cookie).
  */
-int client_logout(client_t *client);
+int client_logout(client_t *client, command_data_t cmd_data);
 
 /*
  * Close the connection and exit the program.

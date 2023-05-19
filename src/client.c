@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
             case DELETE_BOOK:
                 break;
             case LOGOUT:
-                ret = client_logout(client);
+                ret = client_logout(client, cmd_data);
                 break;
             case EXIT:
                 client_exit(client);
