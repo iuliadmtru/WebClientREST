@@ -41,7 +41,7 @@ char *compute_get_request(char *host, char *url, char *query_params,
         }
         strcpy(dst, cookies[i]);
 
-        sprintf(line, "Set-Cookie: %s", body_data_buffer);
+        sprintf(line, "Cookie: %s", body_data_buffer);
         compute_message(message, line);
     }
 

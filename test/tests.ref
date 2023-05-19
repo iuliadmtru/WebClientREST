@@ -5,4 +5,6 @@ username=password=Already logged in!
 200 - OK - Logout successful!
 Cannot logout - not logged in!
 username=password=200 - OK - Login successful!
+200 - OK - Access permitted!
 200 - OK - Logout successful!
+Cannot access library - not logged in!

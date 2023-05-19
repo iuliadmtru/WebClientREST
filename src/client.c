@@ -21,12 +21,18 @@ int main(int argc, char *argv[])
 
     // Initialize server ip and port and connect to the server.
     client_t *client = client_init(SERVERADDR, SERVERPORT);
-    connection_open(client);
+    int connected = connection_open(client);
 
     while (1) {
-        // Parse user command.
-        command_parse(stdin, cmd);
-        command_data_t cmd_data = command_get_data(stdin, stdout, cmd);
+        command_data_t cmd_data;
+
+        if (!connected) {
+            connected = connection_open(client);
+        } else {
+            // Parse user command.
+            command_parse(stdin, cmd);
+            cmd_data = command_get_data(stdin, stdout, cmd);
+        }
 
         int ret = 0;
         switch (cmd_data.command) {
@@ -58,7 +64,13 @@ int main(int argc, char *argv[])
                 continue;
         }
 
-        client_treat_error(client, stderr);
+        if (ret == NO_RESPONSE) {
+            connected = 0;
+            // printf("No response\n");
+            continue;
+        }
+
+        client_treat_output_message(client, stderr);
     }
 
     return 0;

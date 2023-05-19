@@ -14,10 +14,11 @@ enum error_codes {USERNAME_UNAVAILABLE = -1,
                   ACCESS_DENIED = -4,
                   INVALID_ID = -5,
                   INCORRECT_DETAILS = -6,
-                  ALREADY_LOGGED_IN = -7};
+                  ALREADY_LOGGED_IN = -7,
+                  NO_RESPONSE = -8};
 
 // opens a connection with server, returns a socket
-void connection_open(client_t *client);
+int connection_open(client_t *client);
 
 // adds a line to a string message
 void compute_message(char *message, const char *line);
@@ -37,9 +38,9 @@ char *recover_payload(char *server_response);
 
 void store_success_message(client_t *client, int cmd);
 
-int treat_server_error(client_t *client,
-                       char *payload,
-                       command_data_t cmd_data);
+int treat_server_message(client_t *client,
+                         char *payload,
+                         command_data_t cmd_data);
 
 // // closes a server connection on socket sockfd
 // void close_connection(int sockfd);

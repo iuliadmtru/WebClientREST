@@ -18,13 +18,18 @@
 #define CONTENT_LENGTH "Content-Length: "
 #define CONTENT_LENGTH_SIZE (sizeof(CONTENT_LENGTH) - 1)
 
-void connection_open(client_t *client)
+int connection_open(client_t *client)
 {
     // Initialize socket.
     struct sockaddr_in cli_addr;
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
         perror("ERROR opening socket");
+    
+    // Make socket reusable.
+    int enable = 1;
+    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
+        perror("setsockopt(SO_REUSEADDR) failed");
 
     memset(&cli_addr, 0, sizeof(cli_addr));
     cli_addr.sin_family = AF_INET;
@@ -36,6 +41,8 @@ void connection_open(client_t *client)
         perror("ERROR connecting");
 
     client->sockfd = sockfd;
+
+    return 1;
 }
 
 void compute_message(char *message, const char *line)
@@ -159,50 +166,50 @@ void store_success_message(client_t *client, int cmd)
 {
     switch (cmd) {
         case REGISTER:
-            strcpy(client->error_message,
+            strcpy(client->server_message,
                    "200 - OK - Registration successful!");
             break;
         case LOGIN:
-            strcpy(client->error_message,
+            strcpy(client->server_message,
                    "200 - OK - Login successful!");
             break;
         case ENTER_LIBRARY:
-            strcpy(client->error_message,
+            strcpy(client->server_message,
                    "200 - OK - Access permitted!");
             break;
         case LOGOUT:
-            strcpy(client->error_message,
+            strcpy(client->server_message,
                    "200 - OK - Logout successful!");
             break;
         default:
-            strcpy(client->error_message,
+            strcpy(client->server_message,
                    "400 - ERROR - Unknown command!");
             break;
     }
 }
 
-int treat_server_error(client_t *client,
-                       char *payload,
-                       command_data_t cmd_data)
+int treat_server_message(client_t *client,
+                         char *payload,
+                         command_data_t cmd_data)
 {
     int ret = 0;
     char *tmp;
-    char error_msg[ERROR_MSG_MAXLEN];
+    char server_msg[SERVER_MSG_MAXLEN];
 
     // Get the value of the payload (what is after ":"), if any.
     while ((tmp = strsep(&payload, ":")) != NULL) {
-        strcpy(error_msg, tmp);
+        strcpy(server_msg, tmp);
         ret = 1;
     }
 
     if (ret) {
         // Remove quotes.
-        int len = strlen(error_msg);
-        memmove(error_msg, error_msg + 1, len + 1);
-        error_msg[len - 2] = 0;
+        int len = strlen(server_msg);
+        memmove(server_msg, server_msg + 1, len + 1);
+        server_msg[len - 2] = 0;
 
-        // Store error message.
-        strcpy(client->error_message, error_msg);
+        // Store server message.
+        strcpy(client->server_message, server_msg);
         ret = USERNAME_UNAVAILABLE;
     } else {
         store_success_message(client, cmd_data.command);
