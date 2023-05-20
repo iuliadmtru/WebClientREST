@@ -8,7 +8,7 @@
 #define SERVERADDR "34.254.242.81"
 #define SERVERPORT 8080
 #define IP_MAXLEN 15
-#define SERVER_MSG_MAXLEN 1000
+#define SERVER_MSG_MAXLEN 10000
 #define TOKEN_MAXLEN 1000
 
 struct client_t {

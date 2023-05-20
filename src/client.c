@@ -67,11 +67,11 @@ int main(int argc, char *argv[])
 
         if (ret == NO_RESPONSE) {
             connected = 0;
-            printf("No response\n");
+            // printf("No response\n");
             continue;
         }
 
-        client_treat_output_message(client, stderr);
+        client_treat_output_message(client, stdout);
     }
 
     return 0;

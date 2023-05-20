@@ -68,5 +68,5 @@ void client_print(client_t *client)
 
 void client_treat_output_message(client_t *client, FILE *fout)
 {
-    fprintf(stdout, "%s\n", client->server_message);
+    fprintf(fout, "%s\n", client->server_message);
 }

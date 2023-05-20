@@ -253,31 +253,16 @@ int client_register(client_t *client, command_data_t cmd_data)
         return NO_RESPONSE;
     }
 
-    // printf("\n");
-    // server_interaction_print(server_interaction);
-    // printf("\n");
-
-    // JSON_Object *payload = parse_json_object_payload(server_interaction);
-    server_interaction_set_json_object(server_interaction);
-
-    // Treat (potential) errors.
+    // Treat potential errors.
     int ret = 0;
-    // char *server_msg = get_server_message(client, server_interaction, cmd_data);
-    // if (!found_server_message(server_msg)) {
-    //     client_set_server_message(client,
-    //                               "200 - OK - Registration successful!");
-    //     ret = 0;
-    // } else {
-    //     client_set_server_message(client, server_msg);
-    //     ret = USERNAME_UNAVAILABLE;
-    // }
-
+    server_interaction_set_json_object(server_interaction);
     if (!found_server_error(server_interaction)) {
         client_set_server_message(client,
                                   "200 - OK - Registration successful!");
         ret = 0;
     } else {
-        char *error_msg = server_interaction_get_error(server_interaction);
+        char *error_msg =
+            server_interaction_get_message(server_interaction, "error");
         client_set_server_message(client, error_msg);
         ret = USERNAME_UNAVAILABLE;
     }
@@ -290,10 +275,6 @@ int client_register(client_t *client, command_data_t cmd_data)
 
 int client_login(client_t *client, command_data_t cmd_data)
 {
-    // printf("Client before log in:\n");
-    // client_print(client);
-    // printf("\n");
-
     // If the client is already logged in, don't log in again.
     if (client->cookie) {
         client_set_server_message(client, "400 - ERROR - Already logged in!");
@@ -315,25 +296,18 @@ int client_login(client_t *client, command_data_t cmd_data)
     cookie_t *session_cookie = recover_cookie(server_interaction);
     client_add_cookie(client, session_cookie);
 
-    // Treat (potential) errors.
+    // Treat potential errors.
     int ret = 0;
-    char *server_msg = get_server_message(client, server_interaction, cmd_data);
-
-    // printf("\n");
-    // server_interaction_print(server_interaction);
-    // printf("\n");
-
-    if (!found_server_message(server_msg)) {
+    server_interaction_set_json_object(server_interaction);
+    if (!found_server_error(server_interaction)) {
         client_set_server_message(client, "200 - OK - Login successful!");
         ret = 0;
     } else {
-        client_set_server_message(client, server_msg);
-        ret = INVALID_CREDENTIALS;
+        char *error_msg =
+            server_interaction_get_message(server_interaction, "error");
+        client_set_server_message(client, error_msg);
+        ret = USERNAME_UNAVAILABLE;
     }
-
-    // printf("Client after log in:\n");
-    // client_print(client);
-    // printf("\n");
 
     // Free resources.
     server_interaction_destroy(server_interaction);
@@ -361,20 +335,37 @@ int client_enter_library(client_t *client, command_data_t cmd_data)
         return NO_RESPONSE;
     }
 
+    // Get access token.
+    server_interaction_set_json_object(server_interaction);
+
+    // Treat potential errors.
+    int ret = 0;
+    if (found_server_error(server_interaction)) {
+        char *error_msg =
+            server_interaction_get_message(server_interaction, "error");
+        client_set_server_message(client, error_msg);
+        ret = ACCESS_DENIED;
+    }
+
     // Store authentication token.
-    char *server_msg = get_server_message(client, server_interaction, cmd_data);
-    client_set_token(client, server_msg);
+    char *token = server_interaction_get_message(server_interaction, "token");
+    client_set_token(client, token);
     client_set_server_message(client, "200 - OK - Access permitted!");
 
     // Free resources.
     server_interaction_destroy(server_interaction);
 
-    // printf("Client after entering:\n");
-    // // server_interaction_print(server_interaction);
-    // client_print(client);
-    // printf("\n");
+    return ret;
+}
 
-    return 0;
+char *get_books(server_interaction_t *server_interaction)
+{
+    char *books = 
+        (char *)json_serialize_to_string_pretty(server_interaction->json_value);
+
+    // printf("%s\n", books);
+
+    return books;
 }
 
 int client_get_books(client_t *client, command_data_t cmd_data)
@@ -397,22 +388,21 @@ int client_get_books(client_t *client, command_data_t cmd_data)
         return NO_RESPONSE;
     }
 
-    printf("\n");
-    server_interaction_print(server_interaction);
-    // client_print(client);
-    printf("\n");
+    // Get books details.
+    server_interaction_set_json_array(server_interaction);
 
-    // Store books details.
-    char *server_msg = get_server_message(client, server_interaction, cmd_data);
-
+    // Treat potential errors.
     int ret = 0;
-    if (!found_server_message(server_msg)) {
-        client_set_server_message(client, "200 - OK - Obtained books!");
-        ret = 0;
-    } else {
-        client_set_server_message(client, server_msg);
+    if (found_server_error(server_interaction)) {
+        char *error_msg =
+            server_interaction_get_message(server_interaction, "error");
+        client_set_server_message(client, error_msg);
         ret = ACCESS_DENIED;
     }
+
+    // Show books details.
+    char *books = get_books(server_interaction);
+    client_set_server_message(client, books);
 
     // Free resources.
     server_interaction_destroy(server_interaction);

@@ -16,6 +16,7 @@ void server_interaction_print(server_interaction_t *server_interaction)
     printf("******** Request: ********\n'%s'\n", server_interaction->request);
     printf("******** Response: ********\n'%s'\n", server_interaction->response);
     printf("******** JSON payload: ********\n'%s'\n", server_interaction->json_payload);
+    printf("******** JSON Value: ********\n'%s'\n", json_serialize_to_string_pretty(server_interaction->json_value));
     if (server_interaction->json_object) {
         printf("******** JSON Object exists: ********\n");
     } else {
@@ -32,7 +33,7 @@ void server_interaction_print(server_interaction_t *server_interaction)
 server_interaction_t *server_interaction_create()
 {
     server_interaction_t *server_interaction =
-        malloc(sizeof(server_interaction_t));
+        calloc(1, sizeof(server_interaction_t));
 
     server_interaction->payload = NULL;
     server_interaction->request = NULL;
@@ -164,17 +165,26 @@ void server_interaction_set_json_object(server_interaction_t *server_interaction
     server_interaction->json_object = json_value_get_object(root_value);
 }
 
+void server_interaction_set_json_array(server_interaction_t *server_interaction)
+{
+    server_interaction_set_json_value(server_interaction);
+
+    JSON_Value *root_value = server_interaction->json_value;
+    server_interaction->json_array = json_value_get_array(root_value);
+}
+
 void server_interaction_set_message(server_interaction_t *server_interaction,
                                     char *message)
 {
     strcpy(server_interaction->message, message);
 }
 
-char *server_interaction_get_error(server_interaction_t* server_interaction)
+char *server_interaction_get_message(server_interaction_t* server_interaction,
+                                     char *message)
 {
     JSON_Object *json_object = server_interaction->json_object;
     if (!json_object)
         return "";
 
-    return json_object_get_string(json_object, "error");
+    return (char *)json_object_get_string(json_object, message);
 }

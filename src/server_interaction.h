@@ -34,9 +34,12 @@ void server_interaction_set_json_payload(server_interaction_t *server_interactio
 
 void server_interaction_set_json_object(server_interaction_t *server_interaction);
 
+void server_interaction_set_json_array(server_interaction_t *server_interaction);
+
 void server_interaction_set_message(server_interaction_t *server_interaction,
                                     char *message);
 
-char *server_interaction_get_error(server_interaction_t* server_interaction);
+char *server_interaction_get_message(server_interaction_t* server_interaction,
+                                     char *message);
 
 #endif  // _SERVER_INTERACTION_H_
