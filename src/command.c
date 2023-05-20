@@ -248,7 +248,8 @@ int client_register(client_t *client, command_data_t cmd_data)
 
     if (!server_interaction->response ||
         strlen(server_interaction->response) == 0) {
-        strcpy(client->server_message, "No response from server.");
+        client_set_server_message(client,
+                                  "400 - ERROR - No response from server!");
         return NO_RESPONSE;
     }
 
@@ -257,8 +258,16 @@ int client_register(client_t *client, command_data_t cmd_data)
     // printf("\n");
 
     // Treat (potential) errors.
-    char *payload = recover_payload(server_interaction->response);  // TODO: add this inside the next function
-    int ret = treat_server_message(client, payload, cmd_data);
+    int ret = 0;
+    char *server_msg = get_server_message(client, server_interaction, cmd_data);
+    if (!found_server_message(server_msg)) {
+        client_set_server_message(client,
+                                  "200 - OK - Registration successful!");
+        ret = 0;
+    } else {
+        client_set_server_message(client, server_msg);
+        ret = USERNAME_UNAVAILABLE;
+    }
 
     // Free resources.
     server_interaction_destroy(server_interaction);
@@ -272,11 +281,9 @@ int client_login(client_t *client, command_data_t cmd_data)
     // client_print(client);
     // printf("\n");
 
-    int ret;
-
     // If the client is already logged in, don't log in again.
     if (client->cookie) {
-        strcpy(client->server_message, "Already logged in!");
+        client_set_server_message(client, "400 - ERROR - Already logged in!");
         return ALREADY_LOGGED_IN;
     }
 
@@ -286,24 +293,30 @@ int client_login(client_t *client, command_data_t cmd_data)
 
     if (!server_interaction->response ||
         strlen(server_interaction->response) == 0) {
-        strcpy(client->server_message, "No response from server.");
+        client_set_server_message(client,
+                                  "400 - ERROR - No response from server!");
         return NO_RESPONSE;
     }
+
+    // Store cookie.
+    cookie_t *session_cookie = recover_cookie(server_interaction);
+    client_add_cookie(client, session_cookie);
+
+    // Treat (potential) errors.
+    int ret = 0;
+    char *server_msg = get_server_message(client, server_interaction, cmd_data);
 
     // printf("\n");
     // server_interaction_print(server_interaction);
     // printf("\n");
 
-    char *response_copy = server_interaction->response;
-
-    // Store cookie.
-    cookie_t *session_cookie = recover_cookie(response_copy);
-    client_add_cookie(client, session_cookie);
-
-    // Treat (potential) errors.
-    response_copy = server_interaction->response;
-    char *payload = recover_payload(response_copy);
-    ret = treat_server_message(client, payload, cmd_data);
+    if (!found_server_message(server_msg)) {
+        client_set_server_message(client, "200 - OK - Login successful!");
+        ret = 0;
+    } else {
+        client_set_server_message(client, server_msg);
+        ret = INVALID_CREDENTIALS;
+    }
 
     // printf("Client after log in:\n");
     // client_print(client);
@@ -319,7 +332,8 @@ int client_enter_library(client_t *client, command_data_t cmd_data)
 {
     // If the client is not logged in, error.
     if (!client->cookie) {
-        strcpy(client->server_message, "Cannot access library - not logged in!");
+        client_set_server_message(client,
+                                  "400 - ERROR - Not logged in!");
         return NOT_LOGGED_IN;
     }
 
@@ -329,32 +343,30 @@ int client_enter_library(client_t *client, command_data_t cmd_data)
 
     if (!server_interaction->response ||
         strlen(server_interaction->response) == 0) {
-        strcpy(client->server_message, "No response from server.");
+        client_set_server_message(client,
+                                  "400 - ERROR - No response from server!");
         return NO_RESPONSE;
     }
 
-    // printf("\n");
-    // server_interaction_print(server_interaction);
-    // printf("\n");
-
     // Treat (potential) errors.
-    char *payload = recover_payload(server_interaction->response);
+    // char *payload = recover_payload(server_interaction->response);
     // TODO: change treat_server_message to return the message.
-    int ret = treat_server_message(client, payload, cmd_data);
-    client_set_token(client, client->server_message);
-    store_success_message(client, ENTER_LIBRARY);
+    char *server_msg = get_server_message(client, server_interaction, cmd_data);
+    client_set_token(client, server_msg);
+    client_set_server_message(client, "200 - OK - Access permitted!");
 
     // Free resources.
     server_interaction_destroy(server_interaction);
 
-    return ret;
+    return 0;
 }
 
 int client_logout(client_t *client, command_data_t cmd_data)
 {
     // If the client is not logged in, error.
     if (!client->cookie) {
-        strcpy(client->server_message, "Cannot logout - not logged in!");
+        client_set_server_message(client,
+                                  "400 - ERROR - Not logged in!");
         return NOT_LOGGED_IN;
     }
 
@@ -364,21 +376,14 @@ int client_logout(client_t *client, command_data_t cmd_data)
 
     if (!server_interaction->response ||
         strlen(server_interaction->response) == 0) {
-        strcpy(client->server_message, "No response from server.");
+        client_set_server_message(client,
+                                  "400 - ERROR - No response from server!");
         return NO_RESPONSE;
     }
 
-    // printf("\n");
-    // server_interaction_print(server_interaction);
-    // printf("\n");
-
     // Delete session cookie.
     client_remove_cookie(client);
-    store_success_message(client, LOGOUT);
-
-    // printf("Client after log out:\n");
-    // client_print(client);
-    // printf("\n");
+    client_set_server_message(client, "200 - OK - Logout successful!");
 
     // Free resources.
     server_interaction_destroy(server_interaction);

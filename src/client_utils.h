@@ -34,6 +34,8 @@ void client_remove_cookie(client_t *client);
 
 void client_set_token(client_t *client, char *token);
 
+void client_set_server_message(client_t *client, char *server_message);
+
 void client_print(client_t *client);
 
 void client_treat_output_message(client_t *client, FILE *fout);

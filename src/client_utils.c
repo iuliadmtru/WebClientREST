@@ -45,6 +45,11 @@ void client_set_token(client_t *client, char *token)
     strcpy(client->token, token);
 }
 
+void client_set_server_message(client_t *client, char *server_message)
+{
+    strcpy(client->server_message, server_message);
+}
+
 void client_print(client_t *client)
 {
     printf("Client:\n");

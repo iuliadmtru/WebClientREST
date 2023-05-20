@@ -1,10 +1,10 @@
 username=password=The username iuliadmtru is taken!
 username=password=Credentials are not good!
 username=password=200 - OK - Login successful!
-username=password=Already logged in!
+username=password=400 - ERROR - Already logged in!
 200 - OK - Logout successful!
-Cannot logout - not logged in!
+400 - ERROR - Not logged in!
 username=password=200 - OK - Login successful!
 200 - OK - Access permitted!
 200 - OK - Logout successful!
-Cannot access library - not logged in!
+400 - ERROR - Not logged in!

@@ -4,6 +4,7 @@
 #include "client_utils.h"
 #include "command.h"
 #include "cookie.h"
+#include "server_interaction.h"
 
 #define BUFLEN 4096
 #define LINELEN 1000
@@ -32,15 +33,17 @@ char *receive_from_server(int sockfd);
 // shows the current error
 void error(const char *msg);
 
-cookie_t *recover_cookie(char *server_response);
+cookie_t *recover_cookie(server_interaction_t *server_interaction);
 
-char *recover_payload(char *server_response);
+char *recover_payload(server_interaction_t *server_interaction);
 
 void store_success_message(client_t *client, int cmd);
 
-int treat_server_message(client_t *client,
-                         char *payload,
+char *get_server_message(client_t *client,
+                         server_interaction_t *server_interaction,
                          command_data_t cmd_data);
+
+int found_server_message(char *message);
 
 // // closes a server connection on socket sockfd
 // void close_connection(int sockfd);

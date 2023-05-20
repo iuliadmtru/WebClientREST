@@ -12,6 +12,7 @@
 #include "buffer.h"
 #include "command.h"
 #include "cookie.h"
+#include "server_interaction.h"
 
 #define HEADER_TERMINATOR "\r\n\r\n"
 #define HEADER_TERMINATOR_SIZE (sizeof(HEADER_TERMINATOR) - 1)
@@ -132,8 +133,10 @@ void error(const char *msg)
     exit(0);
 }
 
-cookie_t *recover_cookie(char *server_response)
+cookie_t *recover_cookie(server_interaction_t *server_interaction)
 {
+    char *server_response = server_interaction->response;
+
     // Find the line with the cookie.
     char *field = strstr(server_response, "Set-Cookie:");
     if (!field)
@@ -153,8 +156,10 @@ cookie_t *recover_cookie(char *server_response)
     return cookie;
 }
 
-char *recover_payload(char *server_response)
+char *recover_payload(server_interaction_t *server_interaction)
 {
+    char *server_response = server_interaction->response;
+
     char *payload;
     payload = strsep(&server_response, "{");
     payload = strsep(&server_response, "}");
@@ -166,54 +171,58 @@ void store_success_message(client_t *client, int cmd)
 {
     switch (cmd) {
         case REGISTER:
-            strcpy(client->server_message,
-                   "200 - OK - Registration successful!");
+            client_set_server_message(client,
+                                      "200 - OK - Registration successful!");
             break;
         case LOGIN:
-            strcpy(client->server_message,
-                   "200 - OK - Login successful!");
+            client_set_server_message(client,
+                                      "200 - OK - Login successful!");
             break;
         case ENTER_LIBRARY:
-            strcpy(client->server_message,
-                   "200 - OK - Access permitted!");
+            client_set_server_message(client,
+                                      "200 - OK - Access permitted!");
             break;
         case LOGOUT:
-            strcpy(client->server_message,
-                   "200 - OK - Logout successful!");
+            client_set_server_message(client,
+                                      "200 - OK - Logout successful!");
             break;
         default:
-            strcpy(client->server_message,
-                   "400 - ERROR - Unknown command!");
+            client_set_server_message(client,
+                                      "400 - ERROR - Unknown command!");
             break;
     }
 }
 
-int treat_server_message(client_t *client,
-                         char *payload,
+char *get_server_message(client_t *client,
+                         server_interaction_t *server_interaction,
                          command_data_t cmd_data)
 {
-    int ret = 0;
+    int found = 0;
     char *tmp;
-    char server_msg[SERVER_MSG_MAXLEN];
+    char server_msg[SERVER_MSG_MAXLEN] = "";
+
+    char *payload = recover_payload(server_interaction);
 
     // Get the value of the payload (what is after ":"), if any.
     while ((tmp = strsep(&payload, ":")) != NULL) {
         strcpy(server_msg, tmp);
-        ret = 1;
+        found = 1;
     }
 
-    if (ret) {
+    if (found) {
         // Remove quotes.
         int len = strlen(server_msg);
         memmove(server_msg, server_msg + 1, len + 1);
         server_msg[len - 2] = 0;
-
-        // Store server message.
-        strcpy(client->server_message, server_msg);
-        ret = USERNAME_UNAVAILABLE;
-    } else {
-        store_success_message(client, cmd_data.command);
     }
+    server_interaction_set_message(server_interaction, server_msg);
 
-    return ret;
+    return server_interaction->message;
+}
+
+int found_server_message(char *message)
+{
+    if (strlen(message) == 0)
+        return 0;
+    return 1;
 }

@@ -14,6 +14,7 @@ void server_interaction_print(server_interaction_t *server_interaction)
     printf("******** Payload: ********\n'%s'\n", server_interaction->payload);
     printf("******** Request: ********\n'%s'\n", server_interaction->request);
     printf("******** Response: ********\n'%s'\n", server_interaction->response);
+    printf("******** Message: ********\n'%s'\n", server_interaction->message);
 }
 
 server_interaction_t *server_interaction_create()
@@ -24,6 +25,7 @@ server_interaction_t *server_interaction_create()
     server_interaction->payload = NULL;
     server_interaction->request = NULL;
     server_interaction->response = NULL;
+    strcpy(server_interaction->message, "");
 
     return server_interaction;
 }
@@ -103,4 +105,10 @@ void server_interaction_init(server_interaction_t *server_interaction,
 
             break;
     }
+}
+
+void server_interaction_set_message(server_interaction_t *server_interaction,
+                                    char *message)
+{
+    strcpy(server_interaction->message, message);
 }
