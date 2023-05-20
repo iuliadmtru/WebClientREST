@@ -54,10 +54,4 @@ JSON_Array *parse_json_array_payload(server_interaction_t *server_interaction);
 
 int found_server_error(server_interaction_t *server_interaction);
 
-// // closes a server connection on socket sockfd
-// void close_connection(int sockfd);
-
-// // extracts and returns a JSON from a server response
-// char *basic_extract_json_response(char *str);
-
 #endif  // _HELPERS_H_

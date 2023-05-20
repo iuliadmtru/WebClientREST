@@ -4,7 +4,6 @@
 #include <string.h>     /* memcpy, memset */
 #include <sys/socket.h> /* socket, connect */
 #include <netinet/in.h> /* struct sockaddr_in, struct sockaddr */
-// #include <netdb.h>      /* struct hostent, gethostbyname */
 #include <arpa/inet.h>
 
 #include "client_utils.h"
@@ -93,19 +92,24 @@ char *receive_from_server(int sockfd)
 
         buffer_add(&buffer, response, (size_t) bytes);
         
-        header_end = buffer_find(&buffer, HEADER_TERMINATOR, HEADER_TERMINATOR_SIZE);
+        header_end =
+            buffer_find(&buffer, HEADER_TERMINATOR, HEADER_TERMINATOR_SIZE);
 
         if (header_end >= 0) {
             header_end += HEADER_TERMINATOR_SIZE;
             
-            int content_length_start = buffer_find_insensitive(&buffer, CONTENT_LENGTH, CONTENT_LENGTH_SIZE);
+            int content_length_start =
+                buffer_find_insensitive(&buffer,
+                                        CONTENT_LENGTH,
+                                        CONTENT_LENGTH_SIZE);
             
             if (content_length_start < 0) {
                 continue;           
             }
 
             content_length_start += CONTENT_LENGTH_SIZE;
-            content_length = strtol(buffer.data + content_length_start, NULL, 10);
+            content_length =
+                strtol(buffer.data + content_length_start, NULL, 10);
             break;
         }
     } while (1);
@@ -157,77 +161,6 @@ cookie_t *recover_cookie(server_interaction_t *server_interaction)
     return cookie;
 }
 
-char *recover_payload(server_interaction_t *server_interaction)
-{
-    char *server_response = server_interaction->response;
-
-    char *payload;
-    payload = strsep(&server_response, "{");
-    payload = strsep(&server_response, "}");
-
-    return payload;
-}
-
-void store_success_message(client_t *client, int cmd)
-{
-    switch (cmd) {
-        case REGISTER:
-            client_set_server_message(client,
-                                      "200 - OK - Registration successful!");
-            break;
-        case LOGIN:
-            client_set_server_message(client,
-                                      "200 - OK - Login successful!");
-            break;
-        case ENTER_LIBRARY:
-            client_set_server_message(client,
-                                      "200 - OK - Access permitted!");
-            break;
-        case LOGOUT:
-            client_set_server_message(client,
-                                      "200 - OK - Logout successful!");
-            break;
-        default:
-            client_set_server_message(client,
-                                      "400 - ERROR - Unknown command!");
-            break;
-    }
-}
-
-char *get_server_message(client_t *client,
-                         server_interaction_t *server_interaction,
-                         command_data_t cmd_data)
-{
-    int found = 0;
-    char *tmp;
-    char server_msg[SERVER_MSG_MAXLEN] = "";
-
-    char *payload = recover_payload(server_interaction);
-
-    // Get the value of the payload (what is after ":"), if any.
-    while ((tmp = strsep(&payload, ":")) != NULL) {
-        strcpy(server_msg, tmp);
-        found = 1;
-    }
-
-    if (found) {
-        // Remove quotes.
-        int len = strlen(server_msg);
-        memmove(server_msg, server_msg + 1, len + 1);
-        server_msg[len - 2] = 0;
-    }
-    server_interaction_set_message(server_interaction, server_msg);
-
-    return server_interaction->message;
-}
-
-int found_server_message(char *message)
-{
-    if (strlen(message) == 0)
-        return 0;
-    return 1;
-}
-
 char *get_server_payload_str(server_interaction_t *server_interaction)
 {
     char *server_response = strdup(server_interaction->response);
@@ -235,47 +168,11 @@ char *get_server_payload_str(server_interaction_t *server_interaction)
 
     char *payload;
     while ((payload = strsep(&copy, "\n")) != NULL && (strlen(payload) > 0)) {
-        // printf("Payload:\n%s\n\n", payload);
         server_interaction_set_json_payload(server_interaction, payload);
     }
     free(server_response);
 
-    // printf("\n");
-    // server_interaction_print(server_interaction);
-    // printf("\n");
-
     return server_interaction->json_payload;
-}
-
-JSON_Object *parse_json_object_payload(server_interaction_t *server_interaction)
-{
-    JSON_Value *root_value;
-    JSON_Object *payload;
-
-    char *server_payload = get_server_payload_str(server_interaction);
-    root_value = json_parse_string(server_payload);
-
-    payload = json_value_get_object(root_value);
-
-    // printf("payload: %s\n", json_serialize_to_string_pretty(root_value));
-    // printf("value: %s\n", json_object_get_string(payload, "error"));
-
-    return payload;
-}
-
-JSON_Array *parse_json_array_payload(server_interaction_t *server_interaction)
-{
-    JSON_Value *root_value;
-    JSON_Array *payload;
-
-    char *server_payload = get_server_payload_str(server_interaction);
-    root_value = json_parse_string(server_payload);
-
-    payload = json_value_get_array(root_value);
-
-    printf("payload: %s\n", json_serialize_to_string_pretty(root_value));
-
-    return payload;
 }
 
 int found_server_error(server_interaction_t *server_interaction)

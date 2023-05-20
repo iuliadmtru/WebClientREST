@@ -52,8 +52,6 @@ char *cookie_to_string(cookie_t *cookie)
 
     strcpy(dst, cookie->cookie[last]);
 
-    // printf("cookie_str: %s\n", cookie_str);
-
     return cookie_str;
 }
 

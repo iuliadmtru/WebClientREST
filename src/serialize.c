@@ -63,8 +63,3 @@ char *serialize_delete_book(command_data_t cmd_data)
 
     return serialized_string;
 }
-
-char *serialize_logout(cookie_t *cookie)
-{
-    return cookie_to_string(cookie);
-}

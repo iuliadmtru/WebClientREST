@@ -15,15 +15,18 @@ void server_interaction_print(server_interaction_t *server_interaction)
     printf("******** Payload: ********\n'%s'\n", server_interaction->payload);
     printf("******** Request: ********\n'%s'\n", server_interaction->request);
     printf("******** Response: ********\n'%s'\n", server_interaction->response);
-    printf("******** JSON payload: ********\n'%s'\n", server_interaction->json_payload);
-    printf("******** JSON Value: ********\n'%s'\n", json_serialize_to_string_pretty(server_interaction->json_value));
+    printf("******** JSON payload: ********\n'%s'\n",
+           server_interaction->json_payload);
+    printf("******** JSON Value: ********\n'%s'\n",
+           json_serialize_to_string_pretty(server_interaction->json_value));
     if (server_interaction->json_object) {
         printf("******** JSON Object exists: ********\n");
     } else {
         printf("******** No JSON Object: ********\n");
     }
     if (server_interaction->json_array) {
-        printf("******** JSON Array with %zu elements exists: ********\n", json_array_get_count(server_interaction->json_array));
+        printf("******** JSON Array with %zu elements exists: ********\n",
+               json_array_get_count(server_interaction->json_array));
     } else {
         printf("******** No JSON Array: ********\n");
     }
@@ -67,14 +70,15 @@ void server_interaction_init(server_interaction_t *server_interaction,
     switch (cmd_data.command) {
         case REGISTER:
             server_interaction->payload = serialize_register(cmd_data);
-            server_interaction->request = compute_post_request(client->host_ip,
-                                                               PATH_REGISTER,
-                                                               PAYLOAD_TYPE,
-                                                               server_interaction->payload,
-                                                               2,
-                                                               NULL,
-                                                               0,
-                                                               NULL);
+            server_interaction->request =
+                compute_post_request(client->host_ip,
+                                     PATH_REGISTER,
+                                     PAYLOAD_TYPE,
+                                     server_interaction->payload,
+                                     2,
+                                     NULL,
+                                     0,
+                                     NULL);
             // Send request and store response.
             send_to_server(client->sockfd, server_interaction->request);
             server_interaction->response = receive_from_server(client->sockfd);
@@ -189,22 +193,17 @@ void server_interaction_init(server_interaction_t *server_interaction,
                                     1,
                                     NULL);
 
-            // printf("\nsend get request:\n%s\n\n", server_interaction->request);
-
             // Send request and store response.
             send_to_server(client->sockfd, server_interaction->request);
             server_interaction->response = receive_from_server(client->sockfd);
-
-            // printf("\nreceived response:\n%s\n\n", server_interaction->response);
-
             break;
     }
 }
 
-void server_interaction_set_json_payload(server_interaction_t *server_interaction,
+void server_interaction_set_json_payload(server_interaction_t *server_interact,
                                          char *payload)
 {
-    strcpy(server_interaction->json_payload, payload);
+    strcpy(server_interact->json_payload, payload);
 }
 
 void server_interaction_set_json_value(server_interaction_t *server_interaction)
@@ -217,12 +216,12 @@ void server_interaction_set_json_value(server_interaction_t *server_interaction)
     server_interaction->json_value = root_value;
 }
 
-void server_interaction_set_json_object(server_interaction_t *server_interaction)
+void server_interaction_set_json_object(server_interaction_t *server_interact)
 {
-    server_interaction_set_json_value(server_interaction);
+    server_interaction_set_json_value(server_interact);
 
-    JSON_Value *root_value = server_interaction->json_value;
-    server_interaction->json_object = json_value_get_object(root_value);
+    JSON_Value *root_value = server_interact->json_value;
+    server_interact->json_object = json_value_get_object(root_value);
 }
 
 void server_interaction_set_json_array(server_interaction_t *server_interaction)

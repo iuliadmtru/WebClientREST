@@ -29,12 +29,12 @@ void server_interaction_init(server_interaction_t *server_interaction,
                              client_t *client,
                              command_data_t cmd_data);
 
-void server_interaction_set_json_payload(server_interaction_t *server_interaction,
+void server_interaction_set_json_payload(server_interaction_t *server_interact,
                                          char *payload);
 
-void server_interaction_set_json_object(server_interaction_t *server_interaction);
+void server_interaction_set_json_object(server_interaction_t *server_interact);
 
-void server_interaction_set_json_array(server_interaction_t *server_interaction);
+void server_interaction_set_json_array(server_interaction_t *server_interact);
 
 void server_interaction_set_message(server_interaction_t *server_interaction,
                                     char *message);

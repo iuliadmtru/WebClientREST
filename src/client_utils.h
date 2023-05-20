@@ -38,6 +38,9 @@ void client_set_server_message(client_t *client, char *server_message);
 
 void client_print(client_t *client);
 
+/*
+ * Print a message corresponding to the server response.
+ */
 void client_treat_output_message(client_t *client, FILE *fout);
 
 #endif  // _CLIENT_UTILS_H_

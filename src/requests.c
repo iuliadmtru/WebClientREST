@@ -6,6 +6,7 @@
 #include <netinet/in.h> /* struct sockaddr_in, struct sockaddr */
 #include <netdb.h>      /* struct hostent, gethostbyname */
 #include <arpa/inet.h>
+
 #include "helpers.h"
 #include "requests.h"
 

@@ -4,14 +4,12 @@
 #include "parson.h"
 #include "command.h"
 
+/*
+ * Serialize user input to JSON for POST and DELETE requests.
+ */
 char *serialize_register(command_data_t cmd_data);
-
 char *serialize_login(command_data_t cmd_data);
-
 char *serialize_add_book(command_data_t cmd_data);
-
 char *serialize_delete_book(command_data_t cmd_data);
-
-char *serialize_logout(cookie_t *cookie);
 
 #endif  // _SERIALIZE_H_
