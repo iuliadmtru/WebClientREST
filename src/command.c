@@ -358,14 +358,13 @@ int client_enter_library(client_t *client, command_data_t cmd_data)
     return ret;
 }
 
-char *get_books(server_interaction_t *server_interaction)
+void get_books(server_interaction_t *server_interaction, char *buf)
 {
     char *books = 
         (char *)json_serialize_to_string_pretty(server_interaction->json_value);
+    strcpy(buf, books);
 
-    // printf("%s\n", books);
-
-    return books;
+    free(books);
 }
 
 int client_get_books(client_t *client, command_data_t cmd_data)
@@ -401,7 +400,8 @@ int client_get_books(client_t *client, command_data_t cmd_data)
     }
 
     // Show books details.
-    char *books = get_books(server_interaction);
+    char books[SERVER_MESSAGE_MAXLEN];
+    get_books(server_interaction, books);
     client_set_server_message(client, books);
 
     // Free resources.

@@ -13,7 +13,7 @@ run: client
 	./client
 
 run_valgrind: client
-	valgrind --track-origins=yes ./client
+	valgrind --leak-check=full --track-origins=yes ./client
 
 dummy_test: test/dummy_test.c $(TEST_DEPS)
 	$(CC) $(CFLAGS) -o dummy_test test/dummy_test.c $(TEST_SRCS)
@@ -22,13 +22,13 @@ run_dummy_test: dummy_test
 	./dummy_test && ((cmp test/dummy_test.ref test/dummy_test.out && echo 'PASSED') || echo 'FAILED')
 
 run_dummy_test_valgrind: dummy_test
-	valgrind --track-origins=yes ./dummy_test && ((cmp test/dummy_test.ref test/dummy_test.out && echo 'PASSED') || echo 'FAILED')
+	valgrind --leak-check=full --track-origins=yes ./dummy_test && ((cmp test/dummy_test.ref test/dummy_test.out && echo 'PASSED') || echo 'FAILED')
 
 run_tests: client
 	./client < test/tests.in > test/tests.out && ((cmp test/tests.ref test/tests.out && echo 'PASSED') || echo 'FAILED')
 
 run_tests_valgrind: client
-	valgrind --track-origins=yes ./client < test/tests.in > test/tests.out && ((cmp test/tests.ref test/tests.out && echo 'PASSED') || echo 'FAILED')
+	valgrind --leak-check=full --track-origins=yes ./client < test/tests.in > test/tests.out && ((cmp test/tests.ref test/tests.out && echo 'PASSED') || echo 'FAILED')
 
 clean:
 	rm -f *.o client dummy_test
