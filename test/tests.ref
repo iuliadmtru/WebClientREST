@@ -6,13 +6,6 @@ username=password=400 - ERROR - Already logged in!
 400 - ERROR - Not logged in!
 username=password=200 - OK - Login successful!
 200 - OK - Access permitted!
-id={
-    "id": 8565,
-    "title": "doamne",
-    "author": "ajuta",
-    "publisher": "coaie",
-    "genre": "hai",
-    "page_count": 950
-}
+title=author=genre=publisher=page_count=200 - OK - Book added!
 200 - OK - Logout successful!
 400 - ERROR - Not logged in!

@@ -73,7 +73,8 @@ void server_interaction_init(server_interaction_t *server_interaction,
                                                                server_interaction->payload,
                                                                2,
                                                                NULL,
-                                                               0);
+                                                               0,
+                                                               NULL);
             // Send request and store response.
             send_to_server(client->sockfd, server_interaction->request);
             server_interaction->response = receive_from_server(client->sockfd);
@@ -87,7 +88,8 @@ void server_interaction_init(server_interaction_t *server_interaction,
                                      server_interaction->payload,
                                      2,
                                      NULL,
-                                     0);
+                                     0,
+                                     NULL);
 
             // Send request and store response.
             send_to_server(client->sockfd, server_interaction->request);
@@ -133,6 +135,23 @@ void server_interaction_init(server_interaction_t *server_interaction,
                                     NULL,
                                     0,
                                     client->token);
+
+            // Send request and store response.
+            send_to_server(client->sockfd, server_interaction->request);
+            server_interaction->response = receive_from_server(client->sockfd);
+            break;
+        }
+        case ADD_BOOK: {
+            server_interaction->payload = serialize_add_book(cmd_data);
+            server_interaction->request =
+                compute_post_request(client->host_ip,
+                                     PATH_BOOKS,
+                                     PAYLOAD_TYPE,
+                                     server_interaction->payload,
+                                     2,
+                                     NULL,
+                                     0,
+                                     client->token);
 
             // Send request and store response.
             send_to_server(client->sockfd, server_interaction->request);

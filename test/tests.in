@@ -16,8 +16,12 @@ login
 iuliadmtru
 iuliadmtru
 enter_library
-get_book
-8565
+add_book
+title
+author
+genre
+publisher
+10
 logout
 enter_library
 exit

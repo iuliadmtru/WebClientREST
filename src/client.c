@@ -52,6 +52,7 @@ int main(int argc, char *argv[])
                 ret = client_get_book(client, cmd_data);
                 break;
             case ADD_BOOK:
+                ret = client_add_book(client, cmd_data);
                 break;
             case DELETE_BOOK:
                 break;

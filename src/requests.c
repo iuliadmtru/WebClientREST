@@ -62,8 +62,10 @@ char *compute_get_request(char *host, char *url, char *query_params,
     return message;
 }
 
-char *compute_post_request(char *host, char *url, char* content_type, char *body_data,
-                           int body_data_fields_count, char **cookies, int cookies_count)
+char *compute_post_request(char *host, char *url, char* content_type,
+                           char *body_data, int body_data_fields_count,
+                           char **cookies, int cookies_count,
+                           char *auth_token)
 {
     char *message = calloc(BUFLEN, sizeof(char));
     char *line = calloc(LINELEN, sizeof(char));
@@ -85,6 +87,12 @@ char *compute_post_request(char *host, char *url, char* content_type, char *body
     // Add cookies.
     if (cookies != NULL) {
        
+    }
+
+    // Add authorization token.
+    if (auth_token != NULL) {
+        sprintf(line, "Authorization: Bearer %s", auth_token);
+        compute_message(message, line);
     }
 
     // Add new line at end of header.
