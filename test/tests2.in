@@ -16,8 +16,11 @@ login
 iuliadmtru
 iuliadmtru
 enter_library
-get_book
-8565
 logout
 enter_library
+login
+iuliadmtru
+iuliadmtru
+enter_library
+get_books
 exit

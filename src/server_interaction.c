@@ -120,6 +120,25 @@ void server_interaction_init(server_interaction_t *server_interaction,
             server_interaction->response = receive_from_server(client->sockfd);
             break;
         }
+        case GET_BOOK: {
+            char path[PATH_MAXLEN];
+            strcpy(path, PATH_BOOK);
+            // Add the book id to the end of the string.
+            sprintf(path + strlen(path), "%d", cmd_data.book_id);
+
+            server_interaction->request =
+                compute_get_request(client->host_ip,
+                                    path,
+                                    NULL,
+                                    NULL,
+                                    0,
+                                    client->token);
+
+            // Send request and store response.
+            send_to_server(client->sockfd, server_interaction->request);
+            server_interaction->response = receive_from_server(client->sockfd);
+            break;
+        }
         case LOGOUT:
             server_interaction->request =
                 compute_get_request(client->host_ip,

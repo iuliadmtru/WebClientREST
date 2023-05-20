@@ -22,6 +22,7 @@
 #define PATH_BOOKS "/api/v1/tema/library/books"
 #define PATH_BOOK "/api/v1/tema/library/books/"  // + bookId
 #define PATH_LOGOUT "/api/v1/tema/auth/logout"
+#define PATH_MAXLEN 100
 // Payload.
 #define PAYLOAD_TYPE "application/json"
 
@@ -80,6 +81,11 @@ int client_enter_library(client_t *client, command_data_t cmd_data);
  * Get information about all available books in the library.
  */
 int client_get_books(client_t *client, command_data_t cmd_data);
+
+/*
+ * Get information about a specific book.
+ */
+int client_get_book(client_t *client, command_data_t cmd_data);
 
 /*
  * Logout (delete session cookie).
