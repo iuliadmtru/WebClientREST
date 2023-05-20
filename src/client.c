@@ -46,6 +46,7 @@ int main(int argc, char *argv[])
                 ret = client_enter_library(client, cmd_data);
                 break;
             case GET_BOOKS:
+                ret = client_get_books(client, cmd_data);
                 break;
             case GET_BOOK:
                 break;
@@ -66,7 +67,7 @@ int main(int argc, char *argv[])
 
         if (ret == NO_RESPONSE) {
             connected = 0;
-            // printf("No response\n");
+            printf("No response\n");
             continue;
         }
 

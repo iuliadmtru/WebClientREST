@@ -3,8 +3,8 @@ CFLAGS=-I -Wall.
 
 DEPS=src/*.c src/*.h
 SRCS=src/*.c
-TEST_DEPS=src/buffer.* src/client_utils.* src/command.* src/cookie.* src/helpers.* src/parson.* src/requests.* src/serialize.*
-TEST_SRCS=src/buffer.c src/client_utils.c src/command.c src/cookie.c src/helpers.c src/parson.c src/requests.c src/serialize.c
+TEST_DEPS=src/buffer.* src/client_utils.* src/command.* src/cookie.* src/helpers.* src/parson.* src/requests.* src/serialize.* src/server_interaction.*
+TEST_SRCS=src/buffer.c src/client_utils.c src/command.c src/cookie.c src/helpers.c src/parson.c src/requests.c src/serialize.c src/server_interaction.c
 
 client: $(DEPS)
 	$(CC) $(CFLAGS) -o client $(SRCS)

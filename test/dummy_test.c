@@ -140,6 +140,53 @@ void test_recover_cookie(FILE *fin, FILE *fout, FILE *dev_null)
     cookie_destroy(cookie);
 }
 
+void test_get_server_payload(FILE *fin, FILE *fout, FILE *dev_null)
+{
+    char *str = strdup("HTTP/1.1 200 OK\n\
+Access-Control-Allow-Origin: *\n\
+X-DNS-Prefetch-Control: off\n\
+X-Frame-Options: SAMEORIGIN\n\
+Strict-Transport-Security: max-age=15552000; includeSubDomains\n\
+X-Download-Options: noopen\n\
+X-Content-Type-Options: nosniff\n\
+X-XSS-Protection: 1; mode=block\n\
+Content-Type: application/json; charset=utf-8\n\
+Content-Length: 486\n\
+ETag: W/\"1e6-iHVB7hTODCnXTIQqBusAAQITm+o\"\n\
+Date: Sat, 20 May 2023 14:19:21 GMT\n\
+Connection: keep-alive\n\
+Keep-Alive: timeout=5\n\n\
+[{\"id\":8585,\"title\":\"\\\"GGGG HHH\\\"\\n\"},{\"id\":8559,\"title\":\"XXX\"},{\"id\":8569,\"title\":\"\\\"Test\"},{\"id\":8586,\"title\":\"MNNN BGB\n\"},{\"id\":8548,\"title\":\"f\"},{\"id\":8570,\"title\":\"\\n\"},{\"id\":8514,\"title\":\"alexplozia\"},{\"id\":8515,\"title\":\"a\"},{\"id\":8537,\"title\":\"wrong\"},{\"id\":8565,\"title\":\"doamne\"}]");
+    char *str2 = strdup("HTTP/1.1 200 OK\n\
+Access-Control-Allow-Origin: *\n\
+X-DNS-Prefetch-Control: off\n\
+X-Frame-Options: SAMEORIGIN\n\
+Strict-Transport-Security: max-age=15552000; includeSubDomains\n\
+X-Download-Options: noopen\n\
+X-Content-Type-Options: nosniff\n\
+X-XSS-Protection: 1; mode=block\n\
+Content-Type: application/json; charset=utf-8\n\
+Content-Length: 486\n\
+ETag: W/\"1e6-iHVB7hTODCnXTIQqBusAAQITm+o\"\n\
+Date: Sat, 20 May 2023 14:19:21 GMT\n\
+Connection: keep-alive\n\
+Keep-Alive: timeout=5\n\n\
+{\"error\":\"The username a is taken!\"}");
+    char *copy = str2;
+
+    printf("Initial str:\n\n%s\n\n", str2);
+
+    char *payload;
+    while ((payload = strsep(&str2, "\n")) != NULL && (strlen(payload) > 0))
+        printf("Payload:\n%s\n\n", payload);
+
+    payload = strsep(&str2, "\0");
+    printf("Payload:\n'%s'\n\n", payload);
+
+    free(copy);
+    free(str);
+}
+
 
 void run_tests(FILE *fin, FILE *fout, FILE *dev_null)
 {
@@ -155,7 +202,8 @@ int main()
     FILE *fout = fopen("test/dummy_test.out", "w");
     FILE *dev_null = fopen("/dev/null", "w");
 
-    run_tests(fin, fout, dev_null);
+    // run_tests(fin, fout, dev_null);
+    test_get_server_payload(fin, fout, dev_null);
 
     fclose(fin);
     fclose(fout);

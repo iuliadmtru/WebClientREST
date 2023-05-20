@@ -10,7 +10,8 @@
 #include "requests.h"
 
 char *compute_get_request(char *host, char *url, char *query_params,
-                          char **cookies, int cookies_count)
+                          char **cookies, int cookies_count,
+                          char *auth_token)
 {
     char *message = calloc(BUFLEN, sizeof(char));
     char *line = calloc(LINELEN, sizeof(char));
@@ -42,6 +43,12 @@ char *compute_get_request(char *host, char *url, char *query_params,
         strcpy(dst, cookies[i]);
 
         sprintf(line, "Cookie: %s", body_data_buffer);
+        compute_message(message, line);
+    }
+
+    // Add authorization token.
+    if (auth_token != NULL) {
+        sprintf(line, "Authorization: Bearer %s", auth_token);
         compute_message(message, line);
     }
 

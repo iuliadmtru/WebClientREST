@@ -13,6 +13,7 @@
 #include "command.h"
 #include "cookie.h"
 #include "server_interaction.h"
+#include "parson.h"
 
 #define HEADER_TERMINATOR "\r\n\r\n"
 #define HEADER_TERMINATOR_SIZE (sizeof(HEADER_TERMINATOR) - 1)
@@ -225,4 +226,64 @@ int found_server_message(char *message)
     if (strlen(message) == 0)
         return 0;
     return 1;
+}
+
+char *get_server_payload_str(server_interaction_t *server_interaction)
+{
+    char *server_response = strdup(server_interaction->response);
+    char *copy = server_response;
+
+    char *payload;
+    while ((payload = strsep(&copy, "\n")) != NULL && (strlen(payload) > 0)) {
+        // printf("Payload:\n%s\n\n", payload);
+        server_interaction_set_json_payload(server_interaction, payload);
+    }
+    free(server_response);
+
+    // printf("\n");
+    // server_interaction_print(server_interaction);
+    // printf("\n");
+
+    return server_interaction->json_payload;
+}
+
+JSON_Object *parse_json_object_payload(server_interaction_t *server_interaction)
+{
+    JSON_Value *root_value;
+    JSON_Object *payload;
+
+    char *server_payload = get_server_payload_str(server_interaction);
+    root_value = json_parse_string(server_payload);
+
+    payload = json_value_get_object(root_value);
+
+    // printf("payload: %s\n", json_serialize_to_string_pretty(root_value));
+    // printf("value: %s\n", json_object_get_string(payload, "error"));
+
+    return payload;
+}
+
+JSON_Array *parse_json_array_payload(server_interaction_t *server_interaction)
+{
+    JSON_Value *root_value;
+    JSON_Array *payload;
+
+    char *server_payload = get_server_payload_str(server_interaction);
+    root_value = json_parse_string(server_payload);
+
+    payload = json_value_get_array(root_value);
+
+    printf("payload: %s\n", json_serialize_to_string_pretty(root_value));
+
+    return payload;
+}
+
+int found_server_error(server_interaction_t *server_interaction)
+{
+    if (!server_interaction->json_object)
+        return 0;
+    if (json_object_get_string(server_interaction->json_object, "error"))
+        return 1;
+
+    return 0;
 }

@@ -14,6 +14,7 @@
 #define GENRE_MAXLEN 100
 #define PUBLISHER_MAXLEN 100
 #define KEYVALUE_MAXLEN 1000
+#define BOOKS_MAX_NUM 1000
 // Paths.
 #define PATH_REGISTER "/api/v1/tema/auth/register"
 #define PATH_LOGIN "/api/v1/tema/auth/login"
@@ -74,6 +75,11 @@ int client_login(client_t *client, command_data_t cmd_data);
  * Access the library.
  */
 int client_enter_library(client_t *client, command_data_t cmd_data);
+
+/*
+ * Get information about all available books in the library.
+ */
+int client_get_books(client_t *client, command_data_t cmd_data);
 
 /*
  * Logout (delete session cookie).

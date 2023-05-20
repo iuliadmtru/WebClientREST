@@ -5,6 +5,7 @@
 #include "command.h"
 #include "cookie.h"
 #include "server_interaction.h"
+#include "parson.h"
 
 #define BUFLEN 4096
 #define LINELEN 1000
@@ -44,6 +45,14 @@ char *get_server_message(client_t *client,
                          command_data_t cmd_data);
 
 int found_server_message(char *message);
+
+char *get_server_payload_str(server_interaction_t *server_interaction);
+
+JSON_Object *parse_json_object_payload(server_interaction_t *server_interaction);
+
+JSON_Array *parse_json_array_payload(server_interaction_t *server_interaction);
+
+int found_server_error(server_interaction_t *server_interaction);
 
 // // closes a server connection on socket sockfd
 // void close_connection(int sockfd);
