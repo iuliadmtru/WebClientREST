@@ -33,5 +33,5 @@ run_tests_valgrind: client
 clean:
 	rm -f *.o client dummy_test
 
-zip:
+archive:
 	zip Dumitru_IuliaMaria_321CA_Tema3PC.zip src/* test/* README* Makefile
