@@ -8,13 +8,13 @@
 #define SERVER_MESSAGE_MAXLEN 1000
 
 struct server_interaction_t {
-    char *payload;
-    char *request;
-    char *response;
-    char json_payload[SERVER_MESSAGE_MAXLEN];
-    JSON_Value *json_value;
-    JSON_Object *json_object;
-    JSON_Array *json_array;
+    char *payload;  // User input
+    char *request;  // GET/POST/DELETE
+    char *response;  // Server response
+    char json_payload[SERVER_MESSAGE_MAXLEN];  // Server response JSON payload
+    JSON_Value *json_value;  // Root value for JSON payload
+    JSON_Object *json_object;  // JSON payload stored as a JSON Object
+    JSON_Array *json_array;  // JSON payload stored as a JSON Array
     char message[SERVER_MESSAGE_MAXLEN];
 };
 typedef struct server_interaction_t server_interaction_t;
