@@ -93,6 +93,11 @@ int client_get_book(client_t *client, command_data_t cmd_data);
 int client_add_book(client_t *client, command_data_t cmd_data);
 
 /*
+ * Delete a book from the library.
+ */
+int client_delete_book(client_t *client, command_data_t cmd_data);
+
+/*
  * Logout (delete session cookie).
  */
 int client_logout(client_t *client, command_data_t cmd_data);

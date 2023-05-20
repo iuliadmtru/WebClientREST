@@ -7,5 +7,7 @@ username=password=400 - ERROR - Already logged in!
 username=password=200 - OK - Login successful!
 200 - OK - Access permitted!
 title=author=genre=publisher=page_count=200 - OK - Book added!
+id=200 - OK - Book deleted!
+id=No book was deleted!
 200 - OK - Logout successful!
 400 - ERROR - Not logged in!

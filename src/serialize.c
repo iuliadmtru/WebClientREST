@@ -51,6 +51,19 @@ char *serialize_add_book(command_data_t cmd_data)
     return serialized_string;
 }
 
+char *serialize_delete_book(command_data_t cmd_data)
+{
+    JSON_Value *root_value = json_value_init_object();
+    JSON_Object *root_object = json_value_get_object(root_value);
+
+    json_object_set_number(root_object, "id", cmd_data.book_id);
+    char *serialized_string = json_serialize_to_string_pretty(root_value);
+
+    json_value_free(root_value);
+
+    return serialized_string;
+}
+
 char *serialize_logout(cookie_t *cookie)
 {
     return cookie_to_string(cookie);

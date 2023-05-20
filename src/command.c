@@ -473,14 +473,50 @@ int client_add_book(client_t *client, command_data_t cmd_data)
         return NO_RESPONSE;
     }
 
-    // Get book details.
-    server_interaction_set_json_object(server_interaction);
-
     // Treat potential errors.
     int ret = 0;
     server_interaction_set_json_object(server_interaction);
     if (!found_server_error(server_interaction)) {
         client_set_server_message(client, "200 - OK - Book added!");
+        ret = 0;
+    } else {
+        char *error_msg =
+            server_interaction_get_message(server_interaction, "error");
+        client_set_server_message(client, error_msg);
+        ret = INCORRECT_DETAILS;
+    }
+
+    // Free resources.
+    server_interaction_destroy(server_interaction);
+
+    return 0;
+}
+
+int client_delete_book(client_t *client, command_data_t cmd_data)
+{
+    // If the client is not logged in, error.
+    if (!client->cookie) {
+        client_set_server_message(client,
+                                  "400 - ERROR - Not logged in!");
+        return NOT_LOGGED_IN;
+    }
+
+    // Compute request and get response.
+    server_interaction_t *server_interaction = server_interaction_create();
+    server_interaction_init(server_interaction, client, cmd_data);
+
+    if (!server_interaction->response ||
+        strlen(server_interaction->response) == 0) {
+        client_set_server_message(client,
+                                  "400 - ERROR - No response from server!");
+        return NO_RESPONSE;
+    }
+
+    // Treat potential errors.
+    int ret = 0;
+    server_interaction_set_json_object(server_interaction);
+    if (!found_server_error(server_interaction)) {
+        client_set_server_message(client, "200 - OK - Book deleted!");
         ret = 0;
     } else {
         char *error_msg =
